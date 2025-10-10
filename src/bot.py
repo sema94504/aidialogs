@@ -3,24 +3,56 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
+try:
+    from .llm_client import LLMClient
+except ImportError:
+    from llm_client import LLMClient
+
 logger = logging.getLogger(__name__)
 
 class TelegramBot:
-    def __init__(self, token: str):
+    def __init__(self, token: str, llm_client: LLMClient):
         self.bot = Bot(token=token)
         self.dp = Dispatcher()
+        self.llm_client = llm_client
+        self.user_sessions: dict[int, list[dict]] = {}
         self._register_handlers()
     
     def _register_handlers(self):
         self.dp.message.register(self._start_handler, Command('start'))
-        self.dp.message.register(self._echo_handler)
+        self.dp.message.register(self._message_handler)
     
     async def _start_handler(self, message: Message):
-        await message.answer('Привет! Я эхо-бот. Отправь мне сообщение.')
+        user_id = message.from_user.id
+        self.user_sessions[user_id] = []
+        await message.answer('Привет! Я AI-ассистент. Задай мне любой вопрос.')
     
-    async def _echo_handler(self, message: Message):
-        if message.text:
-            await message.answer(message.text)
+    async def _message_handler(self, message: Message):
+        if not message.text:
+            return
+        
+        user_id = message.from_user.id
+        
+        if user_id not in self.user_sessions:
+            self.user_sessions[user_id] = []
+        
+        self.user_sessions[user_id].append({
+            "role": "user",
+            "content": message.text
+        })
+        
+        try:
+            response = self.llm_client.get_response(self.user_sessions[user_id])
+            
+            self.user_sessions[user_id].append({
+                "role": "assistant",
+                "content": response
+            })
+            
+            await message.answer(response)
+        except Exception as e:
+            logger.error(f"Ошибка при получении ответа LLM: {e}")
+            await message.answer("Извините, произошла ошибка. Попробуйте позже.")
     
     async def start(self):
         await self.dp.start_polling(self.bot)
