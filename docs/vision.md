@@ -7,6 +7,7 @@
 - aiogram 3.x - Telegram Bot API (polling)
 - openai - клиент для работы с OpenAI-совместимым сервером (http://polen.keenetic.pro:3000/v1)
 - python-dotenv - управление .env конфигом
+- pytest - тестирование
 - make - автоматизация команд
 
 ## 2. Принципы разработки
@@ -28,12 +29,17 @@ aidialogs/
 ├── pyproject.toml       # uv config
 ├── docs/
 │   ├── idea.md
-│   └── vision.md
-└── src/
-    ├── main.py          # точка входа
-    ├── bot.py           # TelegramBot
-    ├── llm_client.py    # LLMClient
-    └── config.py        # Config
+│   ├── vision.md
+│   └── conventions.md
+├── src/
+│   ├── main.py          # точка входа
+│   ├── bot.py           # TelegramBot
+│   ├── llm_client.py    # LLMClient
+│   └── config.py        # Config
+└── tests/
+    ├── test_config.py
+    ├── test_llm_client.py
+    └── test_bot.py
 ```
 
 Компоненты:
@@ -147,4 +153,32 @@ logging.basicConfig(
 - Ошибки
 
 Вывод в консоль и `bot.log`.
+
+## 10. Тестирование
+
+Минимальное тестирование для MVP:
+
+**Инструменты:**
+- pytest - фреймворк для тестов
+
+**Структура:**
+```
+tests/
+├── test_config.py      # тесты Config
+├── test_llm_client.py  # тесты LLMClient
+└── test_bot.py         # тесты Bot
+```
+
+**Что тестируем:**
+- `Config` - валидация обязательных полей, корректная загрузка .env
+- `LLMClient` - формирование запроса, обработка ответа (моки API)
+- `Bot` - обработка команд /start, /reset, текстовых сообщений (моки aiogram)
+
+**Что НЕ тестируем:**
+- Интеграции с реальными API
+- E2E сценарии
+- Покрытие кода
+
+**Запуск:**
+- `make test` - запуск всех тестов
 
