@@ -20,12 +20,18 @@ class TelegramBot:
     
     def _register_handlers(self):
         self.dp.message.register(self._start_handler, Command('start'))
+        self.dp.message.register(self._reset_handler, Command('reset'))
         self.dp.message.register(self._message_handler)
     
     async def _start_handler(self, message: Message):
         user_id = message.from_user.id
         self.user_sessions[user_id] = []
         await message.answer('Привет! Я AI-ассистент. Задай мне любой вопрос.')
+    
+    async def _reset_handler(self, message: Message):
+        user_id = message.from_user.id
+        self.user_sessions[user_id] = []
+        await message.answer('История диалога очищена. Начнём сначала!')
     
     async def _message_handler(self, message: Message):
         if not message.text:

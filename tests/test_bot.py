@@ -69,3 +69,20 @@ async def test_message_handler_with_history(bot, llm_client):
     assert len(bot.user_sessions[123]) == 4
     llm_client.get_response.assert_called_once()
 
+@pytest.mark.asyncio
+async def test_reset_command(bot):
+    bot.user_sessions[123] = [
+        {"role": "user", "content": "Старое сообщение"},
+        {"role": "assistant", "content": "Старый ответ"}
+    ]
+    
+    message = MagicMock()
+    message.from_user.id = 123
+    message.answer = AsyncMock()
+    
+    await bot._reset_handler(message)
+    
+    assert 123 in bot.user_sessions
+    assert bot.user_sessions[123] == []
+    message.answer.assert_called_once_with('История диалога очищена. Начнём сначала!')
+
