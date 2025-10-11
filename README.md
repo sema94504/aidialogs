@@ -62,7 +62,7 @@ cp .env.example .env
 TELEGRAM_BOT_TOKEN=your_bot_token_here
 LLM_BASE_URL=http://your-llm-server:3000/v1
 LLM_MODEL=gpt-oss:latest
-SYSTEM_PROMPT=Ты полезный ассистент.
+SYSTEM_PROMPT_FILE=prompts/system_prompt.txt
 ```
 
 ## Запуск
