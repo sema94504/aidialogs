@@ -41,21 +41,12 @@ class TelegramBot:
         self.session_manager.clear_session(user_id)
         await message.answer("История диалога очищена. Начнём сначала!")
 
-    def _read_system_prompt(self) -> str:
-        try:
-            with open(self.system_prompt_file, "r", encoding="utf-8") as f:
-                return f.read().strip()
-        except FileNotFoundError:
-            logger.error(f"Файл промпта не найден: {self.system_prompt_file}")
-            return "Файл с описанием роли не найден."
-
     async def _role_handler(self, message: Message):
         if not message.from_user:
             return
         user_id = message.from_user.id
         logger.info(f"Команда /role от пользователя {user_id}")
-        prompt = self._read_system_prompt()
-        await message.answer(prompt)
+        await message.answer(self.llm_client.system_prompt)
 
     async def _message_handler(self, message: Message):
         if not message.text or not message.from_user:

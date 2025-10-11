@@ -121,18 +121,14 @@ async def test_message_handler_no_text(bot, llm_client):
 
 
 @pytest.mark.asyncio
-async def test_role_command(bot):
-    bot.system_prompt_file = "prompts/system_prompt.txt"
+async def test_role_command(bot, llm_client):
+    llm_client.system_prompt = "Я специализированный ассистент."
 
     message = MagicMock()
     message.from_user.id = 123
     message.answer = AsyncMock()
 
-    with patch("builtins.open", create=True) as mock_open:
-        mock_open.return_value.__enter__.return_value.read.return_value = (
-            "Я специализированный ассистент."
-        )
-        await bot._role_handler(message)
+    await bot._role_handler(message)
 
     message.answer.assert_called_once_with("Я специализированный ассистент.")
 
@@ -168,16 +164,3 @@ async def test_role_handler_no_user(bot):
     await bot._role_handler(message)
 
     message.answer.assert_not_called()
-
-
-@pytest.mark.asyncio
-async def test_role_handler_file_not_found(bot):
-    bot.system_prompt_file = "nonexistent_file.txt"
-
-    message = MagicMock()
-    message.from_user.id = 123
-    message.answer = AsyncMock()
-
-    await bot._role_handler(message)
-
-    message.answer.assert_called_once_with("Файл с описанием роли не найден.")
