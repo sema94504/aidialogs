@@ -17,9 +17,11 @@ logger = logging.getLogger(__name__)
 async def main():
     config = Config()
     llm_client = LLMClient(
-        base_url=config.llm_base_url, model=config.llm_model, system_prompt=config.system_prompt
+        base_url=config.llm_base_url,
+        model=config.llm_model,
+        system_prompt_file=config.system_prompt_file,
     )
-    bot = TelegramBot(config.telegram_bot_token, llm_client)
+    bot = TelegramBot(config.telegram_bot_token, llm_client, config.system_prompt_file)
 
     logger.info("Бот запущен")
     try:

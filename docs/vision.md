@@ -41,6 +41,8 @@ aidialogs/
 │   ├── conventions.md
 │   ├── tasklist.md
 │   └── tasklist_tech_debt.md
+├── prompts/
+│   └── system_prompt.txt # роль ИИ-ассистента
 ├── src/
 │   ├── __init__.py
 │   ├── main.py          # точка входа
@@ -151,6 +153,10 @@ def get_response(self, messages: list[dict]) -> str:
    - Пользователь: `/reset`
    - Бот: очищает историю диалога для этого пользователя
 
+4. **Отображение роли**
+   - Пользователь: `/role`
+   - Бот: отправляет содержимое системного промпта из файла
+
 ## 8. Конфигурирование
 
 Только `.env` файл с переменными:
@@ -159,7 +165,7 @@ def get_response(self, messages: list[dict]) -> str:
 TELEGRAM_BOT_TOKEN=<token>
 LLM_BASE_URL=http://polen.keenetic.pro:3000/v1
 LLM_MODEL=gpt-oss:latest
-SYSTEM_PROMPT=Ты полезный ассистент.
+SYSTEM_PROMPT_FILE=prompts/system_prompt.txt
 ```
 
 `Config` класс через `pydantic-settings`:
@@ -171,7 +177,7 @@ class Config(BaseSettings):
     telegram_bot_token: str
     llm_base_url: str
     llm_model: str
-    system_prompt: str
+    system_prompt_file: str = "prompts/system_prompt.txt"
     
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 ```
@@ -236,7 +242,7 @@ tests/
 **Что тестируем:**
 - `Config` - валидация обязательных полей, корректная загрузка .env
 - `LLMClient` - формирование запроса, обработка ответа, ошибки API (моки)
-- `Bot` - обработка команд /start, /reset, текстовых сообщений, error handling (моки aiogram)
+- `Bot` - обработка команд /start, /reset, /role, текстовых сообщений, error handling (моки aiogram)
 - `SessionManager` - создание сессий, добавление сообщений, очистка
 - Интеграция - взаимодействие компонентов (базовые проверки)
 

@@ -14,7 +14,11 @@ def llm_client():
 @pytest.fixture
 def bot(llm_client):
     with patch("src.bot.Bot"):
-        return TelegramBot("123456789:ABCdefGHIjklMNOpqrsTUVwxyz", llm_client)
+        return TelegramBot(
+            "123456789:ABCdefGHIjklMNOpqrsTUVwxyz",
+            llm_client,
+            "prompts/system_prompt.txt",
+        )
 
 
 @pytest.mark.asyncio
@@ -114,3 +118,20 @@ async def test_message_handler_no_text(bot, llm_client):
 
     message.answer.assert_not_called()
     llm_client.get_response.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_role_command(bot):
+    bot.system_prompt_file = "prompts/system_prompt.txt"
+
+    message = MagicMock()
+    message.from_user.id = 123
+    message.answer = AsyncMock()
+
+    with patch("builtins.open", create=True) as mock_open:
+        mock_open.return_value.__enter__.return_value.read.return_value = (
+            "Я специализированный ассистент."
+        )
+        await bot._role_handler(message)
+
+    message.answer.assert_called_once_with("Я специализированный ассистент.")

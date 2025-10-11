@@ -11,16 +11,18 @@ logger = logging.getLogger(__name__)
 
 
 class TelegramBot:
-    def __init__(self, token: str, llm_client: LLMClient):
+    def __init__(self, token: str, llm_client: LLMClient, system_prompt_file: str):
         self.bot = Bot(token=token)
         self.dp = Dispatcher()
         self.llm_client = llm_client
         self.session_manager = SessionManager()
+        self.system_prompt_file = system_prompt_file
         self._register_handlers()
 
     def _register_handlers(self):
         self.dp.message.register(self._start_handler, Command("start"))
         self.dp.message.register(self._reset_handler, Command("reset"))
+        self.dp.message.register(self._role_handler, Command("role"))
         self.dp.message.register(self._message_handler)
 
     async def _start_handler(self, message: Message):
@@ -38,6 +40,22 @@ class TelegramBot:
         logger.info(f"Команда /reset от пользователя {user_id}")
         self.session_manager.clear_session(user_id)
         await message.answer("История диалога очищена. Начнём сначала!")
+
+    def _read_system_prompt(self) -> str:
+        try:
+            with open(self.system_prompt_file, "r", encoding="utf-8") as f:
+                return f.read().strip()
+        except FileNotFoundError:
+            logger.error(f"Файл промпта не найден: {self.system_prompt_file}")
+            return "Файл с описанием роли не найден."
+
+    async def _role_handler(self, message: Message):
+        if not message.from_user:
+            return
+        user_id = message.from_user.id
+        logger.info(f"Команда /role от пользователя {user_id}")
+        prompt = self._read_system_prompt()
+        await message.answer(prompt)
 
     async def _message_handler(self, message: Message):
         if not message.text or not message.from_user:

@@ -6,10 +6,17 @@ from src.llm_client import LLMClient
 
 
 @pytest.fixture
-def llm_client():
+def llm_client(temp_prompt_file):
     return LLMClient(
-        base_url="http://test.api/v1", model="test-model", system_prompt="Ты тестовый ассистент."
+        base_url="http://test.api/v1", model="test-model", system_prompt_file=temp_prompt_file
     )
+
+
+@pytest.fixture
+def temp_prompt_file(tmp_path):
+    prompt_file = tmp_path / "test_prompt.txt"
+    prompt_file.write_text("Ты тестовый ассистент из файла.")
+    return str(prompt_file)
 
 
 def test_get_response(llm_client):
@@ -36,3 +43,19 @@ def test_get_response_error(llm_client):
         messages = [{"role": "user", "content": "Привет"}]
         with pytest.raises(Exception, match="API Error"):
             llm_client.get_response(messages)
+
+
+def test_llm_client_reads_prompt_from_file(temp_prompt_file):
+    client = LLMClient(
+        base_url="http://test.api/v1", model="test-model", system_prompt_file=temp_prompt_file
+    )
+    assert client.system_prompt == "Ты тестовый ассистент из файла."
+
+
+def test_llm_client_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        LLMClient(
+            base_url="http://test.api/v1",
+            model="test-model",
+            system_prompt_file="nonexistent_file.txt",
+        )
