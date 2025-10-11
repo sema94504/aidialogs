@@ -25,8 +25,7 @@ async def test_start_command(bot):
 
     await bot._start_handler(message)
 
-    assert 123 in bot.user_sessions
-    assert bot.user_sessions[123] == []
+    assert bot.session_manager.get_session(123) == []
     message.answer.assert_called_once_with("Привет! Я AI-ассистент. Задай мне любой вопрос.")
 
 
@@ -41,9 +40,10 @@ async def test_message_handler(bot, llm_client):
 
     await bot._message_handler(message)
 
-    assert len(bot.user_sessions[123]) == 2
-    assert bot.user_sessions[123][0] == {"role": "user", "content": "Привет, как дела?"}
-    assert bot.user_sessions[123][1] == {"role": "assistant", "content": "Это ответ от LLM"}
+    session = bot.session_manager.get_session(123)
+    assert len(session) == 2
+    assert session[0] == {"role": "user", "content": "Привет, как дела?"}
+    assert session[1] == {"role": "assistant", "content": "Это ответ от LLM"}
 
     llm_client.get_response.assert_called_once()
     message.answer.assert_called_once_with("Это ответ от LLM")
@@ -51,10 +51,8 @@ async def test_message_handler(bot, llm_client):
 
 @pytest.mark.asyncio
 async def test_message_handler_with_history(bot, llm_client):
-    bot.user_sessions[123] = [
-        {"role": "user", "content": "Первое сообщение"},
-        {"role": "assistant", "content": "Первый ответ"},
-    ]
+    bot.session_manager.add_message(123, "user", "Первое сообщение")
+    bot.session_manager.add_message(123, "assistant", "Первый ответ")
 
     def check_history(messages):
         assert len(messages) == 3
@@ -72,16 +70,14 @@ async def test_message_handler_with_history(bot, llm_client):
 
     await bot._message_handler(message)
 
-    assert len(bot.user_sessions[123]) == 4
+    assert len(bot.session_manager.get_session(123)) == 4
     llm_client.get_response.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_reset_command(bot):
-    bot.user_sessions[123] = [
-        {"role": "user", "content": "Старое сообщение"},
-        {"role": "assistant", "content": "Старый ответ"},
-    ]
+    bot.session_manager.add_message(123, "user", "Старое сообщение")
+    bot.session_manager.add_message(123, "assistant", "Старый ответ")
 
     message = MagicMock()
     message.from_user.id = 123
@@ -89,8 +85,7 @@ async def test_reset_command(bot):
 
     await bot._reset_handler(message)
 
-    assert 123 in bot.user_sessions
-    assert bot.user_sessions[123] == []
+    assert bot.session_manager.get_session(123) == []
     message.answer.assert_called_once_with("История диалога очищена. Начнём сначала!")
 
 

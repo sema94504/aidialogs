@@ -6,8 +6,10 @@ from aiogram.types import Message
 
 try:
     from .llm_client import LLMClient
+    from .session_manager import SessionManager
 except ImportError:
     from llm_client import LLMClient
+    from session_manager import SessionManager
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +19,7 @@ class TelegramBot:
         self.bot = Bot(token=token)
         self.dp = Dispatcher()
         self.llm_client = llm_client
-        self.user_sessions: dict[int, list[dict]] = {}
+        self.session_manager = SessionManager()
         self._register_handlers()
 
     def _register_handlers(self):
@@ -28,13 +30,13 @@ class TelegramBot:
     async def _start_handler(self, message: Message):
         user_id = message.from_user.id
         logger.info(f"Команда /start от пользователя {user_id}")
-        self.user_sessions[user_id] = []
+        self.session_manager.clear_session(user_id)
         await message.answer("Привет! Я AI-ассистент. Задай мне любой вопрос.")
 
     async def _reset_handler(self, message: Message):
         user_id = message.from_user.id
         logger.info(f"Команда /reset от пользователя {user_id}")
-        self.user_sessions[user_id] = []
+        self.session_manager.clear_session(user_id)
         await message.answer("История диалога очищена. Начнём сначала!")
 
     async def _message_handler(self, message: Message):
@@ -44,17 +46,14 @@ class TelegramBot:
         user_id = message.from_user.id
         logger.info(f"Сообщение от пользователя {user_id}: {message.text}")
 
-        if user_id not in self.user_sessions:
-            self.user_sessions[user_id] = []
-
-        self.user_sessions[user_id].append({"role": "user", "content": message.text})
+        self.session_manager.add_message(user_id, "user", message.text)
 
         try:
             logger.info(f"Отправка запроса в LLM для пользователя {user_id}")
-            response = self.llm_client.get_response(self.user_sessions[user_id])
+            response = self.llm_client.get_response(self.session_manager.get_session(user_id))
             logger.info(f"Получен ответ от LLM для пользователя {user_id}")
 
-            self.user_sessions[user_id].append({"role": "assistant", "content": response})
+            self.session_manager.add_message(user_id, "assistant", response)
 
             await message.answer(response)
         except Exception as e:

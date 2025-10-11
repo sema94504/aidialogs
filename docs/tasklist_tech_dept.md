@@ -6,7 +6,7 @@
 |----------|-----------|--------|------|---------|
 | 1 | Инструменты качества | ✅ Готово | 2025-10-11 | Ruff, pytest-cov, Makefile |
 | 2 | Тестирование | ✅ Готово | 2025-10-11 | Error handling, integration |
-| 3 | SessionManager | ⏳ Ожидание | - | Рефакторинг Bot |
+| 3 | SessionManager | ✅ Готово | 2025-10-11 | Рефакторинг Bot |
 | 4 | Type Safety | ⏳ Ожидание | - | Mypy, type hints |
 | 5 | Pydantic Config | ⏳ Ожидание | - | Упрощение Config |
 
@@ -167,7 +167,7 @@
 **Цель:** Вынести управление сессиями в отдельный класс.
 
 **Задачи:**
-- [ ] Создать `src/session_manager.py`:
+- [x] Создать `src/session_manager.py`:
   ```python
   class SessionManager:
       def __init__(self):
@@ -186,13 +186,13 @@
           self._sessions[user_id] = []
   ```
 
-- [ ] Обновить `src/bot.py` - заменить `self.user_sessions` на `self.session_manager`:
+- [x] Обновить `src/bot.py` - заменить `self.user_sessions` на `self.session_manager`:
   - В `__init__`: `self.session_manager = SessionManager()`
   - В `_start_handler`: `self.session_manager.clear_session(user_id)`
   - В `_reset_handler`: `self.session_manager.clear_session(user_id)`
   - В `_message_handler`: использовать `add_message()` и `get_session()`
 
-- [ ] Создать `tests/test_session_manager.py`:
+- [x] Создать `tests/test_session_manager.py`:
   ```python
   import pytest
   from src.session_manager import SessionManager
@@ -216,9 +216,9 @@
       assert manager.get_session(123) == []
   ```
 
-- [ ] Обновить `tests/test_bot.py` - заменить проверки `bot.user_sessions` на `bot.session_manager`
+- [x] Обновить `tests/test_bot.py` - заменить проверки `bot.user_sessions` на `bot.session_manager`
 
-- [ ] Запустить `make test` - все тесты проходят
+- [x] Запустить `make test` - все тесты проходят
 
 **Проверка vision.md:**
 - ✓ 1 класс = 1 файл (SessionManager в session_manager.py)

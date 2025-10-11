@@ -25,5 +25,5 @@ def test_full_integration():
             bot = TelegramBot(config.telegram_bot_token, llm_client)
 
             assert bot.llm_client == llm_client
-            assert bot.user_sessions == {}
+            assert bot.session_manager.get_session(999) == []
 
