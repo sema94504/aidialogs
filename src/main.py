@@ -1,9 +1,9 @@
 import asyncio
 import logging
 
-from bot import TelegramBot
-from config import Config
-from llm_client import LLMClient
+from .bot import TelegramBot
+from .config import Config
+from .llm_client import LLMClient
 
 logging.basicConfig(
     level=logging.INFO,

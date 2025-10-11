@@ -16,7 +16,8 @@ class LLMClient:
 
         try:
             response = self.client.chat.completions.create(model=self.model, messages=full_messages)
-            return response.choices[0].message.content
+            content = response.choices[0].message.content
+            return content if content is not None else ""
         except Exception as e:
             logger.error(f"Ошибка LLM API: {e}")
             raise

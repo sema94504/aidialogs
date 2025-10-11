@@ -4,12 +4,8 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
-try:
-    from .llm_client import LLMClient
-    from .session_manager import SessionManager
-except ImportError:
-    from llm_client import LLMClient
-    from session_manager import SessionManager
+from .llm_client import LLMClient
+from .session_manager import SessionManager
 
 logger = logging.getLogger(__name__)
 
@@ -28,19 +24,23 @@ class TelegramBot:
         self.dp.message.register(self._message_handler)
 
     async def _start_handler(self, message: Message):
+        if not message.from_user:
+            return
         user_id = message.from_user.id
         logger.info(f"Команда /start от пользователя {user_id}")
         self.session_manager.clear_session(user_id)
         await message.answer("Привет! Я AI-ассистент. Задай мне любой вопрос.")
 
     async def _reset_handler(self, message: Message):
+        if not message.from_user:
+            return
         user_id = message.from_user.id
         logger.info(f"Команда /reset от пользователя {user_id}")
         self.session_manager.clear_session(user_id)
         await message.answer("История диалога очищена. Начнём сначала!")
 
     async def _message_handler(self, message: Message):
-        if not message.text:
+        if not message.text or not message.from_user:
             return
 
         user_id = message.from_user.id
