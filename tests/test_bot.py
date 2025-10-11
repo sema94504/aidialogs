@@ -92,3 +92,30 @@ async def test_reset_command(bot):
     assert 123 in bot.user_sessions
     assert bot.user_sessions[123] == []
     message.answer.assert_called_once_with("История диалога очищена. Начнём сначала!")
+
+
+@pytest.mark.asyncio
+async def test_message_handler_llm_error(bot, llm_client):
+    llm_client.get_response.side_effect = Exception("LLM Error")
+
+    message = MagicMock()
+    message.from_user.id = 123
+    message.text = "Тест"
+    message.answer = AsyncMock()
+
+    await bot._message_handler(message)
+
+    message.answer.assert_called_once_with("Извините, произошла ошибка. Попробуйте позже.")
+
+
+@pytest.mark.asyncio
+async def test_message_handler_no_text(bot, llm_client):
+    message = MagicMock()
+    message.from_user.id = 123
+    message.text = None
+    message.answer = AsyncMock()
+
+    await bot._message_handler(message)
+
+    message.answer.assert_not_called()
+    llm_client.get_response.assert_not_called()

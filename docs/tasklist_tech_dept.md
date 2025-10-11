@@ -5,7 +5,7 @@
 | Итерация | Компонент | Статус | Дата | Заметки |
 |----------|-----------|--------|------|---------|
 | 1 | Инструменты качества | ✅ Готово | 2025-10-11 | Ruff, pytest-cov, Makefile |
-| 2 | Тестирование | ⏳ Ожидание | - | Error handling, integration |
+| 2 | Тестирование | ✅ Готово | 2025-10-11 | Error handling, integration |
 | 3 | SessionManager | ⏳ Ожидание | - | Рефакторинг Bot |
 | 4 | Type Safety | ⏳ Ожидание | - | Mypy, type hints |
 | 5 | Pydantic Config | ⏳ Ожидание | - | Упрощение Config |
@@ -89,7 +89,7 @@
 **Цель:** Добавить недостающие тесты для критических сценариев.
 
 **Задачи:**
-- [ ] Добавить тест error handling в `tests/test_bot.py`:
+- [x] Добавить тест error handling в `tests/test_bot.py`:
   ```python
   @pytest.mark.asyncio
   async def test_message_handler_llm_error(bot, llm_client):
@@ -105,7 +105,7 @@
       message.answer.assert_called_once_with("Извините, произошла ошибка. Попробуйте позже.")
   ```
 
-- [ ] Добавить тест для message без текста в `tests/test_bot.py`:
+- [x] Добавить тест для message без текста в `tests/test_bot.py`:
   ```python
   @pytest.mark.asyncio
   async def test_message_handler_no_text(bot, llm_client):
@@ -120,7 +120,7 @@
       llm_client.get_response.assert_not_called()
   ```
 
-- [ ] Создать `tests/test_integration.py`:
+- [x] Создать `tests/test_integration.py`:
   ```python
   import pytest
   from unittest.mock import patch, MagicMock
@@ -151,7 +151,7 @@
               assert bot.user_sessions == {}
   ```
 
-- [ ] Запустить `make coverage` - проверить покрытие >80%
+- [x] Запустить `make coverage` - проверить покрытие >80%
 
 **Проверка vision.md:**
 - ✓ Минимальное тестирование - только критические сценарии
