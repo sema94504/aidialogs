@@ -135,3 +135,49 @@ async def test_role_command(bot):
         await bot._role_handler(message)
 
     message.answer.assert_called_once_with("Я специализированный ассистент.")
+
+
+@pytest.mark.asyncio
+async def test_start_handler_no_user(bot):
+    message = MagicMock()
+    message.from_user = None
+    message.answer = AsyncMock()
+
+    await bot._start_handler(message)
+
+    message.answer.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_reset_handler_no_user(bot):
+    message = MagicMock()
+    message.from_user = None
+    message.answer = AsyncMock()
+
+    await bot._reset_handler(message)
+
+    message.answer.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_role_handler_no_user(bot):
+    message = MagicMock()
+    message.from_user = None
+    message.answer = AsyncMock()
+
+    await bot._role_handler(message)
+
+    message.answer.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_role_handler_file_not_found(bot):
+    bot.system_prompt_file = "nonexistent_file.txt"
+
+    message = MagicMock()
+    message.from_user.id = 123
+    message.answer = AsyncMock()
+
+    await bot._role_handler(message)
+
+    message.answer.assert_called_once_with("Файл с описанием роли не найден.")
