@@ -7,7 +7,7 @@
 - uv - управление зависимостями и виртуальным окружением
 - aiogram 3.x - Telegram Bot API (polling)
 - openai - клиент для работы с OpenAI-совместимым сервером (http://polen.keenetic.pro:3000/v1)
-- python-dotenv или pydantic-settings - управление .env конфигом
+- pydantic-settings - управление конфигурацией с валидацией
 - make - автоматизация команд
 
 **Качество кода:**
@@ -162,13 +162,10 @@ LLM_MODEL=gpt-oss:latest
 SYSTEM_PROMPT=Ты полезный ассистент.
 ```
 
-`Config` класс:
-- **Вариант 1:** Через `python-dotenv` + ручная валидация
-- **Вариант 2:** Через `pydantic-settings` (упрощает валидацию, следует DRY)
+`Config` класс через `pydantic-settings`:
 
 ```python
-# С pydantic-settings (рекомендуется после рефакторинга)
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Config(BaseSettings):
     telegram_bot_token: str
@@ -176,9 +173,14 @@ class Config(BaseSettings):
     llm_model: str
     system_prompt: str
     
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 ```
+
+**Преимущества pydantic-settings:**
+- Автоматическая валидация типов
+- Декларативный стиль (DRY)
+- Детальные сообщения об ошибках
+- Гибкость в тестах
 
 ## 9. Логгирование
 
