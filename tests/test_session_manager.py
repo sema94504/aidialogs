@@ -44,4 +44,3 @@ def test_multiple_users():
     assert len(session_456) == 1
     assert session_123[0]["content"] == "Сообщение 1"
     assert session_456[0]["content"] == "Сообщение 2"
-

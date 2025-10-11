@@ -13,4 +13,3 @@ class SessionManager:
 
     def clear_session(self, user_id: int) -> None:
         self._sessions[user_id] = []
-

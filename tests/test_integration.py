@@ -23,4 +23,3 @@ def test_full_integration():
 
         assert bot.llm_client == llm_client
         assert bot.session_manager.get_session(999) == []
-
