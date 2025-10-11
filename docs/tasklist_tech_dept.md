@@ -8,7 +8,7 @@
 | 2 | Тестирование | ✅ Готово | 2025-10-11 | Error handling, integration |
 | 3 | SessionManager | ✅ Готово | 2025-10-11 | Рефакторинг Bot |
 | 4 | Type Safety | ✅ Готово | 2025-10-11 | Mypy, type hints |
-| 5 | Pydantic Config | ⏳ Ожидание | - | Упрощение Config |
+| 5 | Pydantic Config | ✅ Готово | 2025-10-11 | Упрощение Config |
 
 **Легенда:** ⏳ Ожидание | 🔄 В работе | ✅ Готово | ❌ Ошибка
 
@@ -293,7 +293,7 @@
 **Цель:** Упростить Config, убрать повторяющуюся валидацию.
 
 **Задачи:**
-- [ ] Добавить pydantic-settings в `pyproject.toml`:
+- [x] Добавить pydantic-settings в `pyproject.toml`:
   ```toml
   [project]
   dependencies = [
@@ -304,7 +304,7 @@
   ]
   ```
 
-- [ ] Переписать `src/config.py`:
+- [x] Переписать `src/config.py`:
   ```python
   from pydantic_settings import BaseSettings
   
@@ -318,7 +318,7 @@
           env_file = ".env"
   ```
 
-- [ ] Обновить `tests/test_config.py`:
+- [x] Обновить `tests/test_config.py`:
   ```python
   import pytest
   from pydantic import ValidationError
@@ -340,7 +340,7 @@
       assert config.llm_base_url == 'http://test.api/v1'
   ```
 
-- [ ] Запустить `make test` - все тесты проходят
+- [x] Запустить `make test` - все тесты проходят
 
 **Проверка vision.md:**
 - ✓ Линейный код - pydantic декларативный
