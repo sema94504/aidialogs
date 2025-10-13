@@ -1,0 +1,17 @@
+[Unit]
+Description=AI Dialogs Git Watcher
+After=network.target
+
+[Service]
+Type=simple
+User=%u
+WorkingDirectory=/opt/aidialogs
+ExecStart=/opt/aidialogs/scripts/git-watcher.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

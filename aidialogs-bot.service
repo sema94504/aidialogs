@@ -1,0 +1,17 @@
+[Unit]
+Description=AI Dialogs Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=%u
+WorkingDirectory=/opt/aidialogs
+ExecStart=/usr/bin/sh -c "cd /opt/aidialogs/src && /usr/bin/uv run python main.py"
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

@@ -58,7 +58,7 @@ SYSTEM_PROMPT=Ты полезный ассистент.
 
 ## Запуск
 
-### Запуск бота
+### Разработка (интерактивный режим)
 
 ```bash
 make run
@@ -68,6 +68,67 @@ make run
 
 ```bash
 cd src && uv run python main.py
+```
+
+### Развертывание как демон (production)
+
+Бот работает как systemd сервис с автоматическим перезапуском и обновлением из git.
+
+#### 1. Установка сервисов
+
+```bash
+make install-services
+```
+
+Это установит два systemd сервиса:
+- `aidialogs-bot` - основной бот
+- `aidialogs-watcher` - мониторинг git-репозитория
+
+#### 2. Управление сервисами
+
+Запуск:
+```bash
+make start
+```
+
+Остановка:
+```bash
+make stop
+```
+
+Статус:
+```bash
+make status
+```
+
+#### 3. Просмотр логов
+
+Логи основного бота:
+```bash
+make logs
+```
+
+Логи git-watcher:
+```bash
+make logs-watcher
+```
+
+Или напрямую через journalctl:
+```bash
+sudo journalctl -u aidialogs-bot -f
+sudo journalctl -u aidialogs-watcher -f
+```
+
+#### 4. Автоматическое обновление
+
+Git-watcher проверяет репозиторий каждую минуту:
+- Выполняет `git fetch origin main`
+- Сравнивает локальный и удаленный HEAD
+- При обнаружении изменений: выполняет `git pull` и перезапускает бот
+
+Логи автоматических обновлений:
+```bash
+tail -f /opt/aidialogs/git-watcher.log
 ```
 
 ### Запуск тестов
@@ -111,6 +172,8 @@ aidialogs/
 │   ├── bot.py           # TelegramBot класс
 │   ├── llm_client.py    # LLMClient класс
 │   └── config.py        # Config класс
+├── scripts/
+│   └── git-watcher.sh   # скрипт мониторинга git
 ├── tests/
 │   ├── test_bot.py
 │   ├── test_llm_client.py
@@ -121,7 +184,9 @@ aidialogs/
 ├── .env                 # конфигурация (не в git)
 ├── .env.example         # пример конфигурации
 ├── Makefile             # команды для запуска
-└── pyproject.toml       # зависимости проекта
+├── pyproject.toml       # зависимости проекта
+├── aidialogs-bot.service     # systemd unit основного бота
+└── aidialogs-watcher.service # systemd unit git-watcher
 ```
 
 ## Логирование
