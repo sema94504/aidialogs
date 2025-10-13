@@ -1,0 +1,147 @@
+---
+alwaysApply: true
+---
+QA-инженер следует TDD (Test-Driven Development) с фокусом на основной функционал.
+
+## TDD цикл
+
+1. **Red** - напиши падающий тест для нового функционала
+2. **Green** - реализуй минимальный код для прохождения теста
+3. **Refactor** - оптимизируй код, тесты остаются зелёными
+
+## Что тестируем
+
+- Публичные методы с бизнес-логикой
+- Валидацию данных
+- Error handling и edge cases
+- Интеграцию компонентов (базовые сценарии)
+
+## Что НЕ тестируем
+
+- Приватные методы (тестируются через публичные)
+- Геттеры/сеттеры без логики
+- Конструкторы без валидации
+- Тривиальный код (присваивания, простые return)
+- Реальные API вызовы (только моки)
+
+## Структура теста
+
+Arrange-Act-Assert паттерн:
+
+```python
+def test_add_message():
+    # Arrange
+    manager = SessionManager()
+    
+    # Act
+    manager.add_message(123, "user", "Привет")
+    
+    # Assert
+    assert manager.get_session(123)[0] == {"role": "user", "content": "Привет"}
+```
+
+## Правила
+
+- Один тест = одна проверка
+- Фикстуры для переиспользования setup-кода
+- Моки для изоляции внешних зависимостей
+- Type hints в тестах
+- Явные assert сообщения только при сложной логике
+
+## Именование
+
+Формат: `test_<что_тестируется>_<сценарий>`
+
+```python
+# ✅ Хорошо
+def test_get_response()
+def test_get_response_error()
+def test_message_handler_with_history()
+
+# ❌ Плохо
+def test_should_return_response()
+def test_check_error_handling()
+def test_1()
+```
+
+## Фикстуры
+
+Переиспользуй setup:
+
+```python
+@pytest.fixture
+def llm_client():
+    return MagicMock(spec=LLMClient)
+
+@pytest.fixture
+def bot(llm_client):
+    return TelegramBot("token", llm_client)
+```
+
+## Моки
+
+Изолируй внешние зависимости:
+
+```python
+# unittest.mock для sync
+from unittest.mock import MagicMock, patch
+
+# AsyncMock для async
+message.answer = AsyncMock()
+
+# Патчинг
+with patch.object(client.chat.completions, "create") as mock:
+    mock.return_value = response
+```
+
+## Async тесты
+
+```python
+@pytest.mark.asyncio
+async def test_start_command(bot):
+    message = MagicMock()
+    message.answer = AsyncMock()
+    await bot._start_handler(message)
+    message.answer.assert_called_once()
+```
+
+## Покрытие
+
+- Целевое покрытие >80% для критичного кода
+- Не гнаться за 100%
+- Проверка: `make coverage`
+- Игнорировать тривиальные части
+
+## Команды
+
+```bash
+make test       # Запуск всех тестов
+make coverage   # Тесты + покрытие
+```
+
+## Запуск перед коммитом
+
+1. `make test` - все тесты зелёные
+2. `make coverage` - проверь >80%
+3. Исправь падающие тесты
+
+## Избегай boilerplate
+
+```python
+# ❌ Бессмысленный тест
+def test_session_manager_init():
+    manager = SessionManager()
+    assert manager is not None
+
+# ✅ Проверка функционала
+def test_get_session_creates_new():
+    manager = SessionManager()
+    assert manager.get_session(123) == []
+```
+
+## Принципы
+
+- **KISS**: простые, понятные тесты
+- **DRY**: фикстуры для дублирования
+- **Фокус**: только критичный функционал
+- **Скорость**: быстрые юнит-тесты, моки вместо реальных API
