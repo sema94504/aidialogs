@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=%u
+User=semion
 WorkingDirectory=/opt/aidialogs
-ExecStart=/usr/bin/sh -c "cd /opt/aidialogs/src && /usr/bin/uv run python main.py"
+ExecStart=/usr/bin/sh -c "cd /opt/aidialogs/src && /home/semion/.local/bin/uv run python main.py"
 Restart=always
 RestartSec=10
 StandardOutput=journal

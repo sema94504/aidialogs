@@ -5,3 +5,7 @@ __pycache__/
 .venv/
 bot.log
 *.log
+htmlcov/
+.coverage
+.mypy_cache/
+.ruff_cache/

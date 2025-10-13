@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=%u
+User=semion
 WorkingDirectory=/opt/aidialogs
 ExecStart=/opt/aidialogs/scripts/git-watcher.sh
 Restart=always
