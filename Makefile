@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-.PHONY: test run clean install-services start stop status logs logs-watcher
-=======
-.PHONY: lint format typecheck test coverage run clean
+.PHONY: lint format typecheck test coverage run clean install-services start stop status logs logs-watcher
 
 lint:
 	uv run ruff check src/ tests/
@@ -11,7 +8,6 @@ format:
 
 typecheck:
 	uv run mypy src/
->>>>>>> 96f7c63efba3c190b70bf52c67545d1de47b7e16
 
 test:
 	uv run pytest tests/ -v
@@ -57,4 +53,3 @@ logs:
 
 logs-watcher:
 	sudo journalctl -u aidialogs-watcher -f
-
