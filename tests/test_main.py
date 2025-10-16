@@ -12,6 +12,7 @@ async def test_main_initialization(tmp_path):
 
     with (
         patch("src.main.Config") as mock_config,
+        patch("src.main.DatabaseManager") as mock_db,
         patch("src.main.LLMClient") as mock_llm_client,
         patch("src.main.TelegramBot") as mock_bot,
     ):
@@ -20,7 +21,13 @@ async def test_main_initialization(tmp_path):
         mock_config_instance.llm_base_url = "http://test.api/v1"
         mock_config_instance.llm_model = "test-model"
         mock_config_instance.system_prompt_file = str(prompt_file)
+        mock_config_instance.database_path = "aidialogs.db"
         mock_config.return_value = mock_config_instance
+
+        mock_db_instance = MagicMock()
+        mock_db_instance.connect = AsyncMock()
+        mock_db_instance.close = AsyncMock()
+        mock_db.return_value = mock_db_instance
 
         mock_llm_instance = MagicMock()
         mock_llm_client.return_value = mock_llm_instance
@@ -32,19 +39,23 @@ async def test_main_initialization(tmp_path):
         await main()
 
         mock_config.assert_called_once()
+        mock_db.assert_called_once_with("aidialogs.db")
+        mock_db_instance.connect.assert_called_once()
         mock_llm_client.assert_called_once_with(
             base_url="http://test.api/v1",
             model="test-model",
             system_prompt_file=str(prompt_file),
         )
-        mock_bot.assert_called_once_with("test_token", mock_llm_instance, str(prompt_file))
+        mock_bot.assert_called_once()
         mock_bot_instance.start.assert_called_once()
+        mock_db_instance.close.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_main_keyboard_interrupt():
     with (
         patch("src.main.Config") as mock_config,
+        patch("src.main.DatabaseManager") as mock_db,
         patch("src.main.LLMClient") as mock_llm_client,
         patch("src.main.TelegramBot") as mock_bot,
         patch("src.main.logger") as mock_logger,
@@ -54,7 +65,13 @@ async def test_main_keyboard_interrupt():
         mock_config_instance.llm_base_url = "http://test.api/v1"
         mock_config_instance.llm_model = "test-model"
         mock_config_instance.system_prompt_file = "prompts/system_prompt.txt"
+        mock_config_instance.database_path = "aidialogs.db"
         mock_config.return_value = mock_config_instance
+
+        mock_db_instance = MagicMock()
+        mock_db_instance.connect = AsyncMock()
+        mock_db_instance.close = AsyncMock()
+        mock_db.return_value = mock_db_instance
 
         mock_llm_instance = MagicMock()
         mock_llm_client.return_value = mock_llm_instance
@@ -73,6 +90,7 @@ async def test_main_keyboard_interrupt():
 async def test_main_exception_handling():
     with (
         patch("src.main.Config") as mock_config,
+        patch("src.main.DatabaseManager") as mock_db,
         patch("src.main.LLMClient") as mock_llm_client,
         patch("src.main.TelegramBot") as mock_bot,
         patch("src.main.logger") as mock_logger,
@@ -82,7 +100,13 @@ async def test_main_exception_handling():
         mock_config_instance.llm_base_url = "http://test.api/v1"
         mock_config_instance.llm_model = "test-model"
         mock_config_instance.system_prompt_file = "prompts/system_prompt.txt"
+        mock_config_instance.database_path = "aidialogs.db"
         mock_config.return_value = mock_config_instance
+
+        mock_db_instance = MagicMock()
+        mock_db_instance.connect = AsyncMock()
+        mock_db_instance.close = AsyncMock()
+        mock_db.return_value = mock_db_instance
 
         mock_llm_instance = MagicMock()
         mock_llm_client.return_value = mock_llm_instance

@@ -1,15 +1,18 @@
+from .database import DatabaseManager
+
+
 class SessionManager:
-    def __init__(self):
-        self._sessions: dict[int, list[dict]] = {}
+    def __init__(self, db: DatabaseManager):
+        self.db = db
 
-    def get_session(self, user_id: int) -> list[dict]:
-        if user_id not in self._sessions:
-            self._sessions[user_id] = []
-        return self._sessions[user_id]
+    async def get_session(self, user_id: int) -> list[dict]:
+        internal_user_id = await self.db.get_or_create_user(user_id)
+        return await self.db.get_messages(internal_user_id)
 
-    def add_message(self, user_id: int, role: str, content: str) -> None:
-        session = self.get_session(user_id)
-        session.append({"role": role, "content": content})
+    async def add_message(self, user_id: int, role: str, content: str) -> None:
+        internal_user_id = await self.db.get_or_create_user(user_id)
+        await self.db.add_message(internal_user_id, role, content)
 
-    def clear_session(self, user_id: int) -> None:
-        self._sessions[user_id] = []
+    async def clear_session(self, user_id: int) -> None:
+        internal_user_id = await self.db.get_or_create_user(user_id)
+        await self.db.clear_messages(internal_user_id)

@@ -1,8 +1,10 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+import pytest_asyncio
 
 from src.bot import TelegramBot
+from src.database import DatabaseManager
 from src.llm_client import LLMClient
 
 
@@ -11,13 +13,45 @@ def llm_client():
     return MagicMock(spec=LLMClient)
 
 
-@pytest.fixture
-def bot(llm_client):
+@pytest_asyncio.fixture
+async def db():
+    db_manager = DatabaseManager(":memory:")
+    await db_manager.connect()
+
+    await db_manager.execute("""
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            telegram_id INTEGER UNIQUE NOT NULL,
+            created_at TEXT NOT NULL,
+            deleted_at TEXT NULL
+        )
+    """)
+
+    await db_manager.execute("""
+        CREATE TABLE messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            role TEXT NOT NULL,
+            content TEXT NOT NULL,
+            length INTEGER NOT NULL,
+            created_at TEXT NOT NULL,
+            deleted_at TEXT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+
+    yield db_manager
+    await db_manager.close()
+
+
+@pytest_asyncio.fixture
+async def bot(llm_client, db):
     with patch("src.bot.Bot"):
         return TelegramBot(
             "123456789:ABCdefGHIjklMNOpqrsTUVwxyz",
             llm_client,
             "prompts/system_prompt.txt",
+            db,
         )
 
 
@@ -29,7 +63,8 @@ async def test_start_command(bot):
 
     await bot._start_handler(message)
 
-    assert bot.session_manager.get_session(123) == []
+    session = await bot.session_manager.get_session(123)
+    assert session == []
     message.answer.assert_called_once_with("Привет! Я AI-ассистент. Задай мне любой вопрос.")
 
 
@@ -44,7 +79,7 @@ async def test_message_handler(bot, llm_client):
 
     await bot._message_handler(message)
 
-    session = bot.session_manager.get_session(123)
+    session = await bot.session_manager.get_session(123)
     assert len(session) == 2
     assert session[0] == {"role": "user", "content": "Привет, как дела?"}
     assert session[1] == {"role": "assistant", "content": "Это ответ от LLM"}
@@ -55,8 +90,8 @@ async def test_message_handler(bot, llm_client):
 
 @pytest.mark.asyncio
 async def test_message_handler_with_history(bot, llm_client):
-    bot.session_manager.add_message(123, "user", "Первое сообщение")
-    bot.session_manager.add_message(123, "assistant", "Первый ответ")
+    await bot.session_manager.add_message(123, "user", "Первое сообщение")
+    await bot.session_manager.add_message(123, "assistant", "Первый ответ")
 
     def check_history(messages):
         assert len(messages) == 3
@@ -74,14 +109,15 @@ async def test_message_handler_with_history(bot, llm_client):
 
     await bot._message_handler(message)
 
-    assert len(bot.session_manager.get_session(123)) == 4
+    session = await bot.session_manager.get_session(123)
+    assert len(session) == 4
     llm_client.get_response.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_reset_command(bot):
-    bot.session_manager.add_message(123, "user", "Старое сообщение")
-    bot.session_manager.add_message(123, "assistant", "Старый ответ")
+    await bot.session_manager.add_message(123, "user", "Старое сообщение")
+    await bot.session_manager.add_message(123, "assistant", "Старый ответ")
 
     message = MagicMock()
     message.from_user.id = 123
@@ -89,7 +125,8 @@ async def test_reset_command(bot):
 
     await bot._reset_handler(message)
 
-    assert bot.session_manager.get_session(123) == []
+    session = await bot.session_manager.get_session(123)
+    assert session == []
     message.answer.assert_called_once_with("История диалога очищена. Начнём сначала!")
 
 
