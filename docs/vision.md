@@ -8,6 +8,8 @@
 - aiogram 3.x - Telegram Bot API (polling)
 - openai - клиент для работы с OpenAI-совместимым сервером (http://polen.keenetic.pro:3000/v1)
 - pydantic-settings - управление конфигурацией с валидацией
+- aiosqlite - асинхронная работа с SQLite
+- alembic - система миграций БД
 - make - автоматизация команд
 
 **Качество кода:**
@@ -35,6 +37,11 @@ aidialogs/
 ├── Makefile             # команды: format, lint, test, coverage
 ├── pyproject.toml       # uv config + ruff/mypy настройки
 ├── pytest.ini           # настройки pytest
+├── alembic.ini          # конфигурация Alembic
+├── aidialogs.db         # база данных SQLite (не в git)
+├── alembic/
+│   ├── env.py           # Alembic environment
+│   └── versions/        # миграции БД
 ├── docs/
 │   ├── idea.md
 │   ├── vision.md
@@ -49,12 +56,14 @@ aidialogs/
 │   ├── bot.py           # TelegramBot
 │   ├── llm_client.py    # LLMClient
 │   ├── config.py        # Config
-│   └── session_manager.py # SessionManager (после рефакторинга)
+│   ├── database.py      # DatabaseManager
+│   └── session_manager.py # SessionManager
 └── tests/
     ├── __init__.py
     ├── test_config.py
     ├── test_llm_client.py
     ├── test_bot.py
+    ├── test_database.py
     ├── test_session_manager.py
     └── test_integration.py
 ```
@@ -64,27 +73,34 @@ aidialogs/
 - `Bot` - обработка Telegram событий
 - `LLMClient` - работа с LLM
 - `Config` - загрузка конфига
-- `SessionManager` - управление сессиями пользователей (SRP)
+- `DatabaseManager` - работа с SQLite БД
+- `SessionManager` - управление сессиями пользователей через БД (SRP)
 
 ## 4. Архитектура
 
 ```
-main.py -> Config -> Bot -> SessionManager
-                      ↓
-                  LLMClient -> OpenAI API
+main.py -> Config -> DatabaseManager -> SessionManager
+                  ↓                           ↑
+                  Bot -------------------------+
+                  ↓
+              LLMClient -> OpenAI API
 ```
 
 Поток работы:
-1. `main.py` создает `Config`, `LLMClient`, `Bot`
-2. `Bot` создает `SessionManager` для управления сессиями
-3. `Bot` запускает polling
-4. Пользователь отправляет сообщение
-5. `Bot` получает сообщение, добавляет в `SessionManager`
-6. `Bot` вызывает `LLMClient` с историей из `SessionManager`
-7. `LLMClient` отправляет запрос в OpenAI API с системным промптом
-8. `LLMClient` возвращает ответ
-9. `Bot` сохраняет ответ в `SessionManager`
-10. `Bot` отправляет ответ пользователю
+1. `main.py` создает `Config`, `DatabaseManager`, `LLMClient`, `Bot`
+2. `DatabaseManager` подключается к SQLite
+3. `Bot` создает `SessionManager` с `DatabaseManager`
+4. `Bot` запускает polling
+5. Пользователь отправляет сообщение
+6. `Bot` получает сообщение, добавляет в `SessionManager`
+7. `SessionManager` сохраняет в БД через `DatabaseManager`
+8. `Bot` вызывает `LLMClient` с историей из `SessionManager`
+9. `SessionManager` читает из БД через `DatabaseManager`
+10. `LLMClient` отправляет запрос в OpenAI API с системным промптом
+11. `LLMClient` возвращает ответ
+12. `Bot` сохраняет ответ в `SessionManager`
+13. `SessionManager` сохраняет в БД через `DatabaseManager`
+14. `Bot` отправляет ответ пользователю
 
 **Принципы:**
 - Разделение ответственностей (SRP)
@@ -93,33 +109,49 @@ main.py -> Config -> Bot -> SessionManager
 
 ## 5. Модель данных
 
-Для MVP - никакой базы данных, все в памяти:
+База данных SQLite с поддержкой полнотекстового поиска (FTS5):
 
 ```python
-# В SessionManager классе
+# DatabaseManager класс
+class DatabaseManager:
+    def __init__(self, database_path: str):
+        self.database_path = database_path
+        self.connection = None
+    
+    async def connect(self) -> None
+    async def close(self) -> None
+    async def get_or_create_user(self, telegram_id: int) -> int
+    async def add_message(self, user_id: int, role: str, content: str) -> None
+    async def get_messages(self, user_id: int) -> list[dict]
+    async def clear_messages(self, user_id: int) -> None
+
+# SessionManager работает через DatabaseManager
 class SessionManager:
-    def __init__(self):
-        self._sessions: dict[int, list[dict]] = {}
+    def __init__(self, db: DatabaseManager):
+        self.db = db
     
-    def get_session(self, user_id: int) -> list[dict]:
+    async def get_session(self, user_id: int) -> list[dict]:
         ...
     
-    def add_message(self, user_id: int, role: str, content: str) -> None:
+    async def add_message(self, user_id: int, role: str, content: str) -> None:
         ...
     
-    def clear_session(self, user_id: int) -> None:
+    async def clear_session(self, user_id: int) -> None:
         ...
 ```
 
-Структура сессии:
-- Ключ: `user_id` (Telegram ID)
-- Значение: список сообщений `[{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]`
+Схема БД:
+- **users**: telegram_id, created_at, deleted_at (soft delete)
+- **messages**: user_id, role, content, length, created_at, deleted_at (soft delete)
+- **messages_fts**: виртуальная таблица FTS5 для полнотекстового поиска
 
 История диалога:
-- Хранится только в памяти процесса
-- При перезапуске - история теряется
-- Без персистентности
-- Управляется отдельным классом для соблюдения SRP
+- Хранится в SQLite
+- Сохраняется между перезапусками
+- Soft delete - данные не удаляются физически
+- Поддержка полнотекстового поиска через FTS5
+- Метаданные: дата создания, длина сообщения
+- Управляется через DatabaseManager и SessionManager (SRP)
 
 ## 6. Работа с LLM
 
