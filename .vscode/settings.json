@@ -45,6 +45,8 @@
     ".ruff_cache": true,
     "htmlcov": true,
     ".coverage": true
-  }
+  },
+  "cursorpyright.analysis.autoImportCompletions": true,
+  "cursorpyright.analysis.typeCheckingMode": "basic"
 }
 
