@@ -1,5 +1,5 @@
 ---
-alwaysApply: true
+alwaysApply: false
 ---
 Ты разрабатываешь Telegram бота по @docs/vision.md.
 
