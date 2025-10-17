@@ -18,8 +18,11 @@ class StatCollector(Protocol):
         42
     """
 
-    async def get_stats(self) -> DashboardStats:
+    async def get_stats(self, days: int = 7) -> DashboardStats:
         """Получить статистику для дашборда.
+
+        Args:
+            days: Количество дней для графиков (по умолчанию 7).
 
         Returns:
             DashboardStats: Полная статистика с метриками, графиком и сообщениями.

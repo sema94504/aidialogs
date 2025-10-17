@@ -3,7 +3,7 @@
 import random
 from datetime import datetime, timedelta
 
-from src.api.models import ActivityPoint, DashboardStats, Metrics, RecentMessage
+from src.api.models import ActivityPoint, ChartDataPoint, DashboardStats, Metrics, RecentMessage
 
 
 class MockStatCollector:
@@ -21,15 +21,19 @@ class MockStatCollector:
         """
         self.random = random.Random(seed)
 
-    async def get_stats(self) -> DashboardStats:
+    async def get_stats(self, days: int = 7) -> DashboardStats:
         """Сгенерировать mock статистику.
+
+        Args:
+            days: Количество дней для графиков (по умолчанию 7).
 
         Returns:
             DashboardStats: Синтетические данные для дашборда.
         """
         return DashboardStats(
             metrics=self._generate_metrics(),
-            activity_chart=self._generate_activity_chart(),
+            activity_chart=self._generate_activity_chart(days),
+            chart_data=self._generate_chart_data(days),
             recent_messages=self._generate_recent_messages(),
         )
 
@@ -129,3 +133,32 @@ class MockStatCollector:
             )
 
         return messages
+
+    def _generate_chart_data(self, days: int = 7) -> list[ChartDataPoint]:
+        """Сгенерировать данные для интерактивных графиков.
+
+        Args:
+            days: Количество дней истории.
+
+        Returns:
+            Список точек с данными для всех метрик.
+        """
+        today = datetime.now().date()
+        points = []
+
+        for i in range(days):
+            date = today - timedelta(days=days - 1 - i)
+
+            # Генерируем данные с некоторой корреляцией
+            base_activity = self.random.randint(20, 100)
+
+            points.append(
+                ChartDataPoint(
+                    date=date.isoformat(),
+                    active_users=self.random.randint(5, 50),
+                    messages=base_activity + self.random.randint(-10, 30),
+                    avg_length=round(self.random.uniform(50.0, 150.0), 1),
+                )
+            )
+
+        return points

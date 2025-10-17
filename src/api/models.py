@@ -19,6 +19,15 @@ class ActivityPoint(BaseModel):
     count: int = Field(..., ge=0, description="Количество сообщений за день")
 
 
+class ChartDataPoint(BaseModel):
+    """Точка данных для интерактивных графиков."""
+
+    date: str = Field(..., description="Дата в формате ISO (YYYY-MM-DD)")
+    active_users: int | None = Field(None, ge=0, description="Активные пользователи за день")
+    messages: int | None = Field(None, ge=0, description="Количество сообщений за день")
+    avg_length: float | None = Field(None, ge=0.0, description="Средняя длина сообщения за день")
+
+
 class RecentMessage(BaseModel):
     """Последнее сообщение пользователя."""
 
@@ -33,4 +42,5 @@ class DashboardStats(BaseModel):
 
     metrics: Metrics
     activity_chart: list[ActivityPoint] = Field(..., min_length=0, max_length=30)
+    chart_data: list[ChartDataPoint] = Field(..., min_length=0, max_length=90)
     recent_messages: list[RecentMessage] = Field(..., min_length=0, max_length=20)

@@ -35,16 +35,19 @@ def get_stat_collector() -> StatCollector:
 
 
 @app.get("/api/stats", response_model=DashboardStats)
-async def get_stats(collector: StatCollector = Depends(get_stat_collector)) -> DashboardStats:
+async def get_stats(
+    days: int = 7, collector: StatCollector = Depends(get_stat_collector)
+) -> DashboardStats:
     """Получить статистику для дашборда.
 
     Args:
+        days: Количество дней для графиков (по умолчанию 7).
         collector: Инжектированный StatCollector.
 
     Returns:
         DashboardStats: Полная статистика с метриками, графиком и сообщениями.
     """
-    return await collector.get_stats()
+    return await collector.get_stats(days=days)
 
 
 @app.get("/")
