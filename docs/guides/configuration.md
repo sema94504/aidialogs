@@ -322,3 +322,4 @@ client = OpenAI(
 - [Тестирование](testing.md) - тестирование конфигурации
 - [Troubleshooting](troubleshooting.md) - решение проблем
 
+

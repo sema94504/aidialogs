@@ -445,3 +445,4 @@ A: Пока никак (MVP). Пользователи могут делать `
 - [Development](development.md) - процесс разработки
 - [Deployment](deployment.md) - деплой в продакшен
 
+

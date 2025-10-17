@@ -503,3 +503,4 @@ make test  # ✅ Все зеленые
 - [Deployment](deployment.md) - подготовка к продакшену
 - [Troubleshooting](troubleshooting.md) - отладка тестов
 
+

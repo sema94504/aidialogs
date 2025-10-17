@@ -221,3 +221,4 @@ clear_session(user_id: int) -> None                 # Очистка
 - [Codebase Tour](codebase-tour.md) - детальный обзор кода
 - [Тестирование](testing.md) - тесты SessionManager
 
+

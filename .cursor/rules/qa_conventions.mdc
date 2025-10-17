@@ -1,5 +1,5 @@
 ---
-alwaysApply: false
+alwaysApply: true
 ---
 QA-инженер следует TDD (Test-Driven Development) с фокусом на основной функционал.
 

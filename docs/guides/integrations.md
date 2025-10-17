@@ -294,3 +294,4 @@ message.answer = AsyncMock()
 - [Конфигурация](configuration.md) - настройка параметров
 - [Тестирование](testing.md) - тестирование интеграций
 
+

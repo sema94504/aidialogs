@@ -1,3 +1,4 @@
+import io
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -6,6 +7,10 @@ import pytest_asyncio
 from src.bot import TelegramBot
 from src.database import DatabaseManager
 from src.llm_client import LLMClient
+
+TEST_IMAGE_BASE64 = (
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+)
 
 
 @pytest.fixture
@@ -75,6 +80,7 @@ async def test_message_handler(bot, llm_client):
     message = MagicMock()
     message.from_user.id = 123
     message.text = "Привет, как дела?"
+    message.photo = None
     message.answer = AsyncMock()
 
     await bot._message_handler(message)
@@ -105,6 +111,7 @@ async def test_message_handler_with_history(bot, llm_client):
     message = MagicMock()
     message.from_user.id = 123
     message.text = "Второе сообщение"
+    message.photo = None
     message.answer = AsyncMock()
 
     await bot._message_handler(message)
@@ -137,6 +144,7 @@ async def test_message_handler_llm_error(bot, llm_client):
     message = MagicMock()
     message.from_user.id = 123
     message.text = "Тест"
+    message.photo = None
     message.answer = AsyncMock()
 
     await bot._message_handler(message)
@@ -149,6 +157,7 @@ async def test_message_handler_no_text(bot, llm_client):
     message = MagicMock()
     message.from_user.id = 123
     message.text = None
+    message.photo = None
     message.answer = AsyncMock()
 
     await bot._message_handler(message)
@@ -201,3 +210,111 @@ async def test_role_handler_no_user(bot):
     await bot._role_handler(message)
 
     message.answer.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_message_handler_with_photo(bot, llm_client):
+    import base64
+
+    llm_client.get_response.return_value = "На фото видна красная точка"
+
+    message = MagicMock()
+    message.from_user.id = 123
+    message.text = None
+    message.caption = "Что на этой картинке?"
+    message.answer = AsyncMock()
+
+    photo = MagicMock()
+    photo.file_id = "test_file_id"
+    message.photo = [photo]
+
+    file_mock = MagicMock()
+    file_mock.file_path = "photos/test.jpg"
+
+    image_bytes = base64.b64decode(TEST_IMAGE_BASE64)
+    download_mock = io.BytesIO(image_bytes)
+
+    bot.bot.get_file = AsyncMock(return_value=file_mock)
+    bot.bot.download_file = AsyncMock(return_value=download_mock)
+
+    await bot._message_handler(message)
+
+    session = await bot.session_manager.get_session(123)
+    assert len(session) == 2
+    assert session[0]["role"] == "user"
+    assert isinstance(session[0]["content"], list)
+    assert session[0]["content"][0] == {"type": "text", "text": "Что на этой картинке?"}
+
+    bot.bot.get_file.assert_called_once_with("test_file_id")
+    bot.bot.download_file.assert_called_once_with("photos/test.jpg")
+    message.answer.assert_called_once_with("На фото видна красная точка")
+
+
+@pytest.mark.asyncio
+async def test_message_handler_with_photo_no_caption(bot, llm_client):
+    import base64
+
+    llm_client.get_response.return_value = "Я вижу изображение"
+
+    message = MagicMock()
+    message.from_user.id = 123
+    message.text = None
+    message.caption = None
+    message.answer = AsyncMock()
+
+    photo = MagicMock()
+    photo.file_id = "test_file_id"
+    message.photo = [photo]
+
+    file_mock = MagicMock()
+    file_mock.file_path = "photos/test.jpg"
+
+    image_bytes = base64.b64decode(TEST_IMAGE_BASE64)
+    download_mock = io.BytesIO(image_bytes)
+
+    bot.bot.get_file = AsyncMock(return_value=file_mock)
+    bot.bot.download_file = AsyncMock(return_value=download_mock)
+
+    await bot._message_handler(message)
+
+    session = await bot.session_manager.get_session(123)
+    assert len(session) == 2
+    assert session[0]["role"] == "user"
+    assert isinstance(session[0]["content"], list)
+    assert len(session[0]["content"]) == 1
+    assert session[0]["content"][0]["type"] == "image_url"
+
+    message.answer.assert_called_once_with("Я вижу изображение")
+
+
+@pytest.mark.asyncio
+async def test_message_handler_photo_with_multiple_sizes(bot, llm_client):
+    import base64
+
+    llm_client.get_response.return_value = "Описание фото"
+
+    message = MagicMock()
+    message.from_user.id = 123
+    message.text = None
+    message.caption = "Опиши"
+    message.answer = AsyncMock()
+
+    photo_small = MagicMock()
+    photo_small.file_id = "small_id"
+    photo_large = MagicMock()
+    photo_large.file_id = "large_id"
+    message.photo = [photo_small, photo_large]
+
+    file_mock = MagicMock()
+    file_mock.file_path = "photos/large.jpg"
+
+    image_bytes = base64.b64decode(TEST_IMAGE_BASE64)
+    download_mock = io.BytesIO(image_bytes)
+
+    bot.bot.get_file = AsyncMock(return_value=file_mock)
+    bot.bot.download_file = AsyncMock(return_value=download_mock)
+
+    await bot._message_handler(message)
+
+    bot.bot.get_file.assert_called_once_with("large_id")
+    message.answer.assert_called_once_with("Описание фото")

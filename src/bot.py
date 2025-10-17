@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import logging
 
 from aiogram import Bot, Dispatcher
@@ -54,13 +55,24 @@ class TelegramBot:
         await message.answer(self.llm_client.system_prompt)
 
     async def _message_handler(self, message: Message):
-        if not message.text or not message.from_user:
+        if not message.from_user:
             return
 
         user_id = message.from_user.id
-        logger.info(f"Сообщение от пользователя {user_id}: {message.text}")
 
-        await self.session_manager.add_message(user_id, "user", message.text)
+        if message.photo:
+            file = await self.bot.get_file(message.photo[-1].file_id)
+            image_bytes = await self.bot.download_file(file.file_path)
+            image_base64 = base64.b64encode(image_bytes.read()).decode()
+
+            text = message.caption or ""
+            logger.info(f"Фото от пользователя {user_id}, размер: {len(image_base64)} байт")
+            await self.session_manager.add_message(user_id, "user", text, image_base64)
+        elif message.text:
+            logger.info(f"Сообщение от пользователя {user_id}: {message.text}")
+            await self.session_manager.add_message(user_id, "user", message.text)
+        else:
+            return
 
         try:
             logger.info(f"Отправка запроса в LLM для пользователя {user_id}")

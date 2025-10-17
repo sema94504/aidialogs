@@ -1,5 +1,5 @@
 ---
-alwaysApply: false
+alwaysApply: true
 ---
 Работай строго по @docs/tasklist.md. Выполняй итерации последовательно по TDD-подходу.
 
