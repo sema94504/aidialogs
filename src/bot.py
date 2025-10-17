@@ -80,9 +80,10 @@ class TelegramBot:
             response = await asyncio.to_thread(self.llm_client.get_response, session)
             logger.info(f"Получен ответ от LLM для пользователя {user_id}")
 
-            await self.session_manager.add_message(user_id, "assistant", response)
-
             await message.answer(response)
+            logger.info(f"Ответ отправлен пользователю {user_id}")
+
+            await self.session_manager.add_message(user_id, "assistant", response)
         except Exception as e:
             logger.error(f"Ошибка при получении ответа LLM для пользователя {user_id}: {e}")
             await message.answer("Извините, произошла ошибка. Попробуйте позже.")
