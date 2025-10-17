@@ -10,6 +10,13 @@ export interface ActivityDataPoint {
   count: number;
 }
 
+export interface ChartDataPoint {
+  date: string;
+  active_users?: number;
+  messages?: number;
+  avg_length?: number;
+}
+
 export interface RecentMessage {
   telegram_id: number;
   role: "user" | "assistant";
@@ -20,6 +27,9 @@ export interface RecentMessage {
 export interface DashboardStats {
   metrics: Metrics;
   activity_chart: ActivityDataPoint[];
+  chart_data: ChartDataPoint[];
   recent_messages: RecentMessage[];
 }
+
+export type MetricType = "total_users" | "total_messages" | "avg_message_length";
 

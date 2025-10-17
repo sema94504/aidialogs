@@ -13,9 +13,12 @@ export class APIError extends Error {
   }
 }
 
-export async function getStats(): Promise<DashboardStats> {
+export async function getStats(days: number = 7): Promise<DashboardStats> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/stats`, {
+    const url = new URL(`${API_BASE_URL}/api/stats`);
+    url.searchParams.set("days", days.toString());
+    
+    const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
