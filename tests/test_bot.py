@@ -180,6 +180,19 @@ async def test_role_command(bot, llm_client):
 
 
 @pytest.mark.asyncio
+async def test_role_command_empty_prompt(bot, llm_client):
+    llm_client.system_prompt = ""
+
+    message = MagicMock()
+    message.from_user.id = 123
+    message.answer = AsyncMock()
+
+    await bot._role_handler(message)
+
+    message.answer.assert_called_once_with("Системный промпт не задан.")
+
+
+@pytest.mark.asyncio
 async def test_start_handler_no_user(bot):
     message = MagicMock()
     message.from_user = None

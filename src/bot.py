@@ -52,7 +52,11 @@ class TelegramBot:
             return
         user_id = message.from_user.id
         logger.info(f"Команда /role от пользователя {user_id}")
-        await message.answer(self.llm_client.system_prompt)
+        prompt = self.llm_client.system_prompt.strip()
+        if not prompt:
+            await message.answer("Системный промпт не задан.")
+        else:
+            await message.answer(prompt)
 
     async def _message_handler(self, message: Message):
         if not message.from_user:
