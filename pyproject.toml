@@ -8,6 +8,8 @@ dependencies = [
     "pydantic-settings>=2.0.0",
     "aiosqlite>=0.19.0",
     "alembic>=1.13.0",
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
 ]
 
 [project.optional-dependencies]
@@ -17,6 +19,7 @@ dev = [
     "pytest-cov>=4.0.0",
     "ruff>=0.1.0",
     "mypy>=1.0.0",
+    "httpx>=0.27.0",
 ]
 
 [tool.ruff]
@@ -25,7 +28,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "B"]
-ignore = ["N802", "N803"]
+ignore = ["N802", "N803", "B008"]
 
 [tool.mypy]
 python_version = "3.11"

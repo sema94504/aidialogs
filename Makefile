@@ -1,4 +1,4 @@
-.PHONY: lint format typecheck test coverage run clean install-services start stop status logs logs-watcher
+.PHONY: lint format typecheck test coverage run run-api test-api clean install-services start stop status logs logs-watcher
 
 lint:
 	uv run ruff check src/ tests/
@@ -17,6 +17,13 @@ coverage:
 
 run:
 	uv run python -m src.main
+
+run-api:
+	uv run uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
+
+test-api:
+	@echo "Testing API endpoint..."
+	@curl -s http://localhost:8000/api/stats | python -m json.tool || echo "API not running. Start with: make run-api"
 
 clean:
 	rm -rf .pytest_cache __pycache__ src/__pycache__ tests/__pycache__
