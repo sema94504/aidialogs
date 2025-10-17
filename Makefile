@@ -1,4 +1,41 @@
-.PHONY: lint format typecheck test coverage run run-api test-api clean install-services start stop status logs logs-watcher
+.PHONY: help lint format typecheck test coverage run run-api test-api clean install-services start stop status logs logs-watcher
+.PHONY: frontend-dev frontend-lint frontend-typecheck frontend-build
+
+.DEFAULT_GOAL := help
+
+help:
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo "  AIDialogs - Available Commands"
+	@echo "════════════════════════════════════════════════════════════════"
+	@echo ""
+	@echo "Backend (Python):"
+	@echo "  make run              Run Telegram bot"
+	@echo "  make run-api          Run API server (Mock)"
+	@echo "  make test             Run tests"
+	@echo "  make coverage         Run tests with coverage"
+	@echo "  make lint             Run linter (ruff)"
+	@echo "  make format           Format code (ruff)"
+	@echo "  make typecheck        Run type checker (mypy)"
+	@echo "  make test-api         Test API endpoint with curl"
+	@echo ""
+	@echo "Frontend (Next.js):"
+	@echo "  make frontend-dev     Run frontend dev server"
+	@echo "  make frontend-lint    Run frontend linter"
+	@echo "  make frontend-typecheck  Run frontend type checker"
+	@echo "  make frontend-build   Build frontend for production"
+	@echo ""
+	@echo "Services (systemd):"
+	@echo "  make install-services Install systemd services"
+	@echo "  make start            Start services"
+	@echo "  make stop             Stop services"
+	@echo "  make status           Show services status"
+	@echo "  make logs             Show bot logs"
+	@echo "  make logs-watcher     Show watcher logs"
+	@echo ""
+	@echo "Misc:"
+	@echo "  make clean            Clean cache and logs"
+	@echo ""
+	@echo "════════════════════════════════════════════════════════════════"
 
 lint:
 	uv run ruff check src/ tests/
@@ -60,3 +97,15 @@ logs:
 
 logs-watcher:
 	sudo journalctl -u aidialogs-watcher -f
+
+frontend-dev:
+	cd frontend && pnpm dev
+
+frontend-lint:
+	cd frontend && pnpm lint
+
+frontend-typecheck:
+	cd frontend && pnpm typecheck
+
+frontend-build:
+	cd frontend && pnpm build
