@@ -26,6 +26,12 @@ services:
       - logs_volume:/var/log/bot
     networks:
       - aidialogs_network
+    healthcheck:
+      test: ["CMD", "test", "-f", "/data/app.db"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 15s
     deploy:
       resources:
         limits:
@@ -43,7 +49,10 @@ services:
   api:
     image: ghcr.io/sema94504/aidialogs-api:latest
     depends_on:
-      - sqlite
+      bot:
+        condition: service_healthy
+      sqlite:
+        condition: service_started
     restart: unless-stopped
     ports:
       - "8063:8000"
