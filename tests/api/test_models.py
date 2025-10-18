@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.api.models import ActivityPoint, DashboardStats, Metrics, RecentMessage
+from src.api.models import ActivityPoint, ChartDataPoint, DashboardStats, Metrics, RecentMessage
 
 
 class TestMetrics:
@@ -144,6 +144,20 @@ class TestDashboardStats:
                 ActivityPoint(date="2025-10-16", count=45),
                 ActivityPoint(date="2025-10-17", count=67),
             ],
+            chart_data=[
+                ChartDataPoint(
+                    date="2025-10-16",
+                    active_users=10,
+                    messages=45,
+                    avg_length=87.5,
+                ),
+                ChartDataPoint(
+                    date="2025-10-17",
+                    active_users=12,
+                    messages=67,
+                    avg_length=90.0,
+                ),
+            ],
             recent_messages=[
                 RecentMessage(
                     telegram_id=123456789,
@@ -155,6 +169,7 @@ class TestDashboardStats:
         )
         assert stats.metrics.total_users == 100
         assert len(stats.activity_chart) == 2
+        assert len(stats.chart_data) == 2
         assert len(stats.recent_messages) == 1
 
     def test_empty_collections(self):
@@ -167,9 +182,11 @@ class TestDashboardStats:
                 avg_message_length=0.0,
             ),
             activity_chart=[],
+            chart_data=[],
             recent_messages=[],
         )
         assert len(stats.activity_chart) == 0
+        assert len(stats.chart_data) == 0
         assert len(stats.recent_messages) == 0
 
     def test_activity_chart_max_length(self):

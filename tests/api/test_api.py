@@ -1,5 +1,7 @@
 """Тесты для FastAPI endpoints."""
 
+import os
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -10,6 +12,8 @@ from src.api.models import DashboardStats
 @pytest.fixture
 def client():
     """Test client для FastAPI приложения."""
+    # Используем Mock режим для тестов
+    os.environ["USE_MOCK_STATS"] = "true"
     return TestClient(app)
 
 
