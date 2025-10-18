@@ -1,0 +1,1002 @@
+2025-10-18T10:22:18.9393480Z Current runner version: '2.329.0'
+2025-10-18T10:22:18.9419522Z ##[group]Runner Image Provisioner
+2025-10-18T10:22:18.9420426Z Hosted Compute Agent
+2025-10-18T10:22:18.9420928Z Version: 20251013.424
+2025-10-18T10:22:18.9421508Z Commit: cfdd8bfed34d71a55b72df4d2e82343c3fc2bab3
+2025-10-18T10:22:18.9422268Z Build Date: 2025-10-13T20:22:23Z
+2025-10-18T10:22:18.9422814Z ##[endgroup]
+2025-10-18T10:22:18.9423316Z ##[group]Operating System
+2025-10-18T10:22:18.9423931Z Ubuntu
+2025-10-18T10:22:18.9424399Z 24.04.3
+2025-10-18T10:22:18.9424807Z LTS
+2025-10-18T10:22:18.9425300Z ##[endgroup]
+2025-10-18T10:22:18.9425740Z ##[group]Runner Image
+2025-10-18T10:22:18.9426680Z Image: ubuntu-24.04
+2025-10-18T10:22:18.9427289Z Version: 20251014.76.1
+2025-10-18T10:22:18.9428259Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251014.76/images/ubuntu/Ubuntu2404-Readme.md
+2025-10-18T10:22:18.9429770Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251014.76
+2025-10-18T10:22:18.9430801Z ##[endgroup]
+2025-10-18T10:22:18.9432018Z ##[group]GITHUB_TOKEN Permissions
+2025-10-18T10:22:18.9433880Z Contents: read
+2025-10-18T10:22:18.9434369Z Metadata: read
+2025-10-18T10:22:18.9434943Z Packages: write
+2025-10-18T10:22:18.9435421Z ##[endgroup]
+2025-10-18T10:22:18.9437925Z Secret source: Actions
+2025-10-18T10:22:18.9438625Z Prepare workflow directory
+2025-10-18T10:22:18.9769584Z Prepare all required actions
+2025-10-18T10:22:18.9807586Z Getting action download info
+2025-10-18T10:22:19.4760275Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-10-18T10:22:19.5844621Z Download action repository 'docker/setup-buildx-action@v3' (SHA:e468171a9de216ec08956ac3ada2f0791b6bd435)
+2025-10-18T10:22:19.9356845Z Download action repository 'docker/login-action@v3' (SHA:5e57cd118135c172c3672efd75eb46360885c0ef)
+2025-10-18T10:22:20.2776579Z Download action repository 'docker/metadata-action@v5' (SHA:c1e51972afc2121e065aed6d45c65596fe445f3f)
+2025-10-18T10:22:20.6404881Z Download action repository 'docker/build-push-action@v6' (SHA:263435318d21b8e681c14492fe198d362a7d2c83)
+2025-10-18T10:22:21.1721340Z Complete job name: build-and-push (bot)
+2025-10-18T10:22:21.2468102Z ##[group]Run actions/checkout@v4
+2025-10-18T10:22:21.2469642Z with:
+2025-10-18T10:22:21.2470485Z   repository: sema94504/aidialogs
+2025-10-18T10:22:21.2471904Z   token: ***
+2025-10-18T10:22:21.2472720Z   ssh-strict: true
+2025-10-18T10:22:21.2473573Z   ssh-user: git
+2025-10-18T10:22:21.2474440Z   persist-credentials: true
+2025-10-18T10:22:21.2475400Z   clean: true
+2025-10-18T10:22:21.2476437Z   sparse-checkout-cone-mode: true
+2025-10-18T10:22:21.2477532Z   fetch-depth: 1
+2025-10-18T10:22:21.2478382Z   fetch-tags: false
+2025-10-18T10:22:21.2479252Z   show-progress: true
+2025-10-18T10:22:21.2480133Z   lfs: false
+2025-10-18T10:22:21.2480923Z   submodules: false
+2025-10-18T10:22:21.2481827Z   set-safe-directory: true
+2025-10-18T10:22:21.2483154Z ##[endgroup]
+2025-10-18T10:22:21.3591850Z Syncing repository: sema94504/aidialogs
+2025-10-18T10:22:21.3594802Z ##[group]Getting Git version info
+2025-10-18T10:22:21.3596511Z Working directory is '/home/runner/work/aidialogs/aidialogs'
+2025-10-18T10:22:21.3598641Z [command]/usr/bin/git version
+2025-10-18T10:22:21.3629660Z git version 2.51.0
+2025-10-18T10:22:21.3656568Z ##[endgroup]
+2025-10-18T10:22:21.3671854Z Temporarily overriding HOME='/home/runner/work/_temp/0a90747e-bddd-4643-ba7d-e9ca1ad5053d' before making global git config changes
+2025-10-18T10:22:21.3675711Z Adding repository directory to the temporary git global config as a safe directory
+2025-10-18T10:22:21.3679136Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aidialogs/aidialogs
+2025-10-18T10:22:21.3711236Z Deleting the contents of '/home/runner/work/aidialogs/aidialogs'
+2025-10-18T10:22:21.3714956Z ##[group]Initializing the repository
+2025-10-18T10:22:21.3718931Z [command]/usr/bin/git init /home/runner/work/aidialogs/aidialogs
+2025-10-18T10:22:21.3786999Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-10-18T10:22:21.3790630Z hint: is subject to change. To configure the initial branch name to use in all
+2025-10-18T10:22:21.3793716Z hint: of your new repositories, which will suppress this warning, call:
+2025-10-18T10:22:21.3795410Z hint:
+2025-10-18T10:22:21.3797024Z hint: 	git config --global init.defaultBranch <name>
+2025-10-18T10:22:21.3798592Z hint:
+2025-10-18T10:22:21.3799755Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-10-18T10:22:21.3801621Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-10-18T10:22:21.3803402Z hint:
+2025-10-18T10:22:21.3804256Z hint: 	git branch -m <name>
+2025-10-18T10:22:21.3805182Z hint:
+2025-10-18T10:22:21.3806646Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-10-18T10:22:21.3808843Z Initialized empty Git repository in /home/runner/work/aidialogs/aidialogs/.git/
+2025-10-18T10:22:21.3812273Z [command]/usr/bin/git remote add origin https://github.com/sema94504/aidialogs
+2025-10-18T10:22:21.3840077Z ##[endgroup]
+2025-10-18T10:22:21.3841994Z ##[group]Disabling automatic garbage collection
+2025-10-18T10:22:21.3843633Z [command]/usr/bin/git config --local gc.auto 0
+2025-10-18T10:22:21.3872887Z ##[endgroup]
+2025-10-18T10:22:21.3874506Z ##[group]Setting up auth
+2025-10-18T10:22:21.3879095Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-10-18T10:22:21.3908603Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-10-18T10:22:21.4170624Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-10-18T10:22:21.4202621Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-10-18T10:22:21.4431409Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-10-18T10:22:21.4468459Z ##[endgroup]
+2025-10-18T10:22:21.4469895Z ##[group]Fetching the repository
+2025-10-18T10:22:21.4477688Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +1ee66d10bdd11d6c388e5e86b9928e0677e57129:refs/remotes/pull/2/merge
+2025-10-18T10:22:21.7058930Z From https://github.com/sema94504/aidialogs
+2025-10-18T10:22:21.7063144Z  * [new ref]         1ee66d10bdd11d6c388e5e86b9928e0677e57129 -> pull/2/merge
+2025-10-18T10:22:21.7099163Z ##[endgroup]
+2025-10-18T10:22:21.7101236Z ##[group]Determining the checkout info
+2025-10-18T10:22:21.7104057Z ##[endgroup]
+2025-10-18T10:22:21.7108012Z [command]/usr/bin/git sparse-checkout disable
+2025-10-18T10:22:21.7201354Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-10-18T10:22:21.7233082Z ##[group]Checking out the ref
+2025-10-18T10:22:21.7237827Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/2/merge
+2025-10-18T10:22:21.7399679Z Note: switching to 'refs/remotes/pull/2/merge'.
+2025-10-18T10:22:21.7402535Z 
+2025-10-18T10:22:21.7403401Z You are in 'detached HEAD' state. You can look around, make experimental
+2025-10-18T10:22:21.7405137Z changes and commit them, and you can discard any commits you make in this
+2025-10-18T10:22:21.7408023Z state without impacting any branches by switching back to a branch.
+2025-10-18T10:22:21.7409108Z 
+2025-10-18T10:22:21.7409773Z If you want to create a new branch to retain commits you create, you may
+2025-10-18T10:22:21.7411550Z do so (now or later) by using -c with the switch command. Example:
+2025-10-18T10:22:21.7412655Z 
+2025-10-18T10:22:21.7413050Z   git switch -c <new-branch-name>
+2025-10-18T10:22:21.7413683Z 
+2025-10-18T10:22:21.7414059Z Or undo this operation with:
+2025-10-18T10:22:21.7414633Z 
+2025-10-18T10:22:21.7414960Z   git switch -
+2025-10-18T10:22:21.7415673Z 
+2025-10-18T10:22:21.7416675Z Turn off this advice by setting config variable advice.detachedHead to false
+2025-10-18T10:22:21.7417912Z 
+2025-10-18T10:22:21.7419131Z HEAD is now at 1ee66d1 Merge 6edcef2932e790455f513e681c07793395cbf541 into f0d27b1492fa213ab722e8c070bd19ac3a1f9317
+2025-10-18T10:22:21.7422638Z ##[endgroup]
+2025-10-18T10:22:21.7447854Z [command]/usr/bin/git log -1 --format=%H
+2025-10-18T10:22:21.7470230Z 1ee66d10bdd11d6c388e5e86b9928e0677e57129
+2025-10-18T10:22:21.7801880Z ##[group]Run docker/setup-buildx-action@v3
+2025-10-18T10:22:21.7802908Z with:
+2025-10-18T10:22:21.7803598Z   driver: docker-container
+2025-10-18T10:22:21.7804436Z   install: false
+2025-10-18T10:22:21.7805144Z   use: true
+2025-10-18T10:22:21.7805836Z   keep-state: false
+2025-10-18T10:22:21.7806955Z   cache-binary: true
+2025-10-18T10:22:21.7807717Z   cleanup: true
+2025-10-18T10:22:21.7808433Z ##[endgroup]
+2025-10-18T10:22:22.0909992Z ##[group]Docker info
+2025-10-18T10:22:22.0938976Z [command]/usr/bin/docker version
+2025-10-18T10:22:23.1735642Z Client: Docker Engine - Community
+2025-10-18T10:22:23.1741699Z  Version:           28.0.4
+2025-10-18T10:22:23.1742150Z  API version:       1.48
+2025-10-18T10:22:23.1742578Z  Go version:        go1.23.7
+2025-10-18T10:22:23.1742977Z  Git commit:        b8034c0
+2025-10-18T10:22:23.1743252Z  Built:             Tue Mar 25 15:07:16 2025
+2025-10-18T10:22:23.1743602Z  OS/Arch:           linux/amd64
+2025-10-18T10:22:23.1743972Z  Context:           default
+2025-10-18T10:22:23.1744143Z 
+2025-10-18T10:22:23.1744303Z Server: Docker Engine - Community
+2025-10-18T10:22:23.1744571Z  Engine:
+2025-10-18T10:22:23.1744782Z   Version:          28.0.4
+2025-10-18T10:22:23.1745063Z   API version:      1.48 (minimum version 1.24)
+2025-10-18T10:22:23.1745391Z   Go version:       go1.23.7
+2025-10-18T10:22:23.1745661Z   Git commit:       6430e49
+2025-10-18T10:22:23.1746281Z   Built:            Tue Mar 25 15:07:16 2025
+2025-10-18T10:22:23.1746575Z   OS/Arch:          linux/amd64
+2025-10-18T10:22:23.1746856Z   Experimental:     false
+2025-10-18T10:22:23.1747089Z  containerd:
+2025-10-18T10:22:23.1747372Z   Version:          v1.7.28
+2025-10-18T10:22:23.1747931Z   GitCommit:        b98a3aace656320842a23f4a392a33f46af97866
+2025-10-18T10:22:23.1748261Z  runc:
+2025-10-18T10:22:23.1748466Z   Version:          1.3.0
+2025-10-18T10:22:23.1748722Z   GitCommit:        v1.3.0-0-g4ca628d1
+2025-10-18T10:22:23.1749003Z  docker-init:
+2025-10-18T10:22:23.1749221Z   Version:          0.19.0
+2025-10-18T10:22:23.1749473Z   GitCommit:        de40ad0
+2025-10-18T10:22:23.1788849Z [command]/usr/bin/docker info
+2025-10-18T10:22:25.6044818Z Client: Docker Engine - Community
+2025-10-18T10:22:25.6045828Z  Version:    28.0.4
+2025-10-18T10:22:25.6046393Z  Context:    default
+2025-10-18T10:22:25.6046769Z  Debug Mode: false
+2025-10-18T10:22:25.6047061Z  Plugins:
+2025-10-18T10:22:25.6047364Z   buildx: Docker Buildx (Docker Inc.)
+2025-10-18T10:22:25.6047759Z     Version:  v0.29.1
+2025-10-18T10:22:25.6048182Z     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+2025-10-18T10:22:25.6048734Z   compose: Docker Compose (Docker Inc.)
+2025-10-18T10:22:25.6049135Z     Version:  v2.38.2
+2025-10-18T10:22:25.6049525Z     Path:     /usr/libexec/docker/cli-plugins/docker-compose
+2025-10-18T10:22:25.6049880Z 
+2025-10-18T10:22:25.6049994Z Server:
+2025-10-18T10:22:25.6050260Z  Containers: 0
+2025-10-18T10:22:25.6050532Z   Running: 0
+2025-10-18T10:22:25.6050804Z   Paused: 0
+2025-10-18T10:22:25.6051069Z   Stopped: 0
+2025-10-18T10:22:25.6051494Z  Images: 0
+2025-10-18T10:22:25.6051771Z  Server Version: 28.0.4
+2025-10-18T10:22:25.6052104Z  Storage Driver: overlay2
+2025-10-18T10:22:25.6052444Z   Backing Filesystem: extfs
+2025-10-18T10:22:25.6052795Z   Supports d_type: true
+2025-10-18T10:22:25.6053112Z   Using metacopy: false
+2025-10-18T10:22:25.6053436Z   Native Overlay Diff: false
+2025-10-18T10:22:25.6053778Z   userxattr: false
+2025-10-18T10:22:25.6054086Z  Logging Driver: json-file
+2025-10-18T10:22:25.6054429Z  Cgroup Driver: systemd
+2025-10-18T10:22:25.6055221Z  Cgroup Version: 2
+2025-10-18T10:22:25.6055519Z  Plugins:
+2025-10-18T10:22:25.6055815Z   Volume: local
+2025-10-18T10:22:25.6056385Z   Network: bridge host ipvlan macvlan null overlay
+2025-10-18T10:22:25.6057012Z   Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+2025-10-18T10:22:25.6057576Z  Swarm: inactive
+2025-10-18T10:22:25.6057907Z  Runtimes: io.containerd.runc.v2 runc
+2025-10-18T10:22:25.6058348Z  Default Runtime: runc
+2025-10-18T10:22:25.6058933Z  Init Binary: docker-init
+2025-10-18T10:22:25.6059405Z  containerd version: b98a3aace656320842a23f4a392a33f46af97866
+2025-10-18T10:22:25.6059919Z  runc version: v1.3.0-0-g4ca628d1
+2025-10-18T10:22:25.6060162Z  init version: de40ad0
+2025-10-18T10:22:25.6060365Z  Security Options:
+2025-10-18T10:22:25.6060653Z   apparmor
+2025-10-18T10:22:25.6060835Z   seccomp
+2025-10-18T10:22:25.6060995Z    Profile: builtin
+2025-10-18T10:22:25.6061172Z   cgroupns
+2025-10-18T10:22:25.6061341Z  Kernel Version: 6.14.0-1012-azure
+2025-10-18T10:22:25.6061596Z  Operating System: Ubuntu 24.04.3 LTS
+2025-10-18T10:22:25.6061827Z  OSType: linux
+2025-10-18T10:22:25.6062003Z  Architecture: x86_64
+2025-10-18T10:22:25.6062189Z  CPUs: 4
+2025-10-18T10:22:25.6062348Z  Total Memory: 15.62GiB
+2025-10-18T10:22:25.6062541Z  Name: runnervmzdgdc
+2025-10-18T10:22:25.6062742Z  ID: 0c68cb6d-35e1-4b96-a199-63d9e74069ac
+2025-10-18T10:22:25.6063003Z  Docker Root Dir: /var/lib/docker
+2025-10-18T10:22:25.6063215Z  Debug Mode: false
+2025-10-18T10:22:25.6063412Z  Username: githubactions
+2025-10-18T10:22:25.6063612Z  Experimental: false
+2025-10-18T10:22:25.6063803Z  Insecure Registries:
+2025-10-18T10:22:25.6068280Z   ::1/128
+2025-10-18T10:22:25.6068490Z   127.0.0.0/8
+2025-10-18T10:22:25.6068692Z  Live Restore Enabled: false
+2025-10-18T10:22:25.6068843Z 
+2025-10-18T10:22:25.6069253Z ##[endgroup]
+2025-10-18T10:22:25.9430792Z ##[group]Buildx version
+2025-10-18T10:22:25.9462077Z [command]/usr/bin/docker buildx version
+2025-10-18T10:22:26.0030389Z github.com/docker/buildx v0.29.1 a32761aeb3debd39be1eca514af3693af0db334b
+2025-10-18T10:22:26.0064041Z ##[endgroup]
+2025-10-18T10:22:26.0226658Z ##[group]Inspecting default docker context
+2025-10-18T10:22:26.0367880Z [
+2025-10-18T10:22:26.0368200Z   {
+2025-10-18T10:22:26.0368505Z     "Name": "default",
+2025-10-18T10:22:26.0368876Z     "Metadata": {},
+2025-10-18T10:22:26.0369203Z     "Endpoints": {
+2025-10-18T10:22:26.0369512Z       "docker": {
+2025-10-18T10:22:26.0369871Z         "Host": "unix:///var/run/docker.sock",
+2025-10-18T10:22:26.0370427Z         "SkipTLSVerify": false
+2025-10-18T10:22:26.0370776Z       }
+2025-10-18T10:22:26.0371046Z     },
+2025-10-18T10:22:26.0371337Z     "TLSMaterial": {},
+2025-10-18T10:22:26.0371684Z     "Storage": {
+2025-10-18T10:22:26.0371994Z       "MetadataPath": "<IN MEMORY>",
+2025-10-18T10:22:26.0372385Z       "TLSPath": "<IN MEMORY>"
+2025-10-18T10:22:26.0372748Z     }
+2025-10-18T10:22:26.0373025Z   }
+2025-10-18T10:22:26.0373339Z ]
+2025-10-18T10:22:26.0382727Z ##[endgroup]
+2025-10-18T10:22:26.0383356Z ##[group]Creating a new builder instance
+2025-10-18T10:22:26.1498814Z [command]/usr/bin/docker buildx create --name builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88 --driver docker-container --buildkitd-flags --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host --use
+2025-10-18T10:22:26.2228192Z builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88
+2025-10-18T10:22:26.2264810Z ##[endgroup]
+2025-10-18T10:22:26.2265734Z ##[group]Booting builder
+2025-10-18T10:22:26.2304043Z [command]/usr/bin/docker buildx inspect --bootstrap --builder builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88
+2025-10-18T10:22:26.2900956Z #1 [internal] booting buildkit
+2025-10-18T10:22:26.4405308Z #1 pulling image moby/buildkit:buildx-stable-1
+2025-10-18T10:22:28.2150268Z #1 pulling image moby/buildkit:buildx-stable-1 1.9s done
+2025-10-18T10:22:28.3657675Z #1 creating container buildx_buildkit_builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880
+2025-10-18T10:22:29.3576546Z #1 creating container buildx_buildkit_builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880 1.1s done
+2025-10-18T10:22:29.3709839Z #1 DONE 3.1s
+2025-10-18T10:22:29.4062055Z Name:          builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88
+2025-10-18T10:22:29.4062579Z Driver:        docker-container
+2025-10-18T10:22:29.4062960Z Last Activity: 2025-10-18 10:22:26 +0000 UTC
+2025-10-18T10:22:29.4063253Z 
+2025-10-18T10:22:29.4063613Z Nodes:
+2025-10-18T10:22:29.4063896Z Name:                  builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880
+2025-10-18T10:22:29.4065029Z Endpoint:              unix:///var/run/docker.sock
+2025-10-18T10:22:29.4065492Z Status:                running
+2025-10-18T10:22:29.4066495Z BuildKit daemon flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+2025-10-18T10:22:29.4067296Z BuildKit version:      v0.25.1
+2025-10-18T10:22:29.4067791Z Platforms:             linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/386
+2025-10-18T10:22:29.4068317Z Labels:
+2025-10-18T10:22:29.4068698Z  org.mobyproject.buildkit.worker.executor:         oci
+2025-10-18T10:22:29.4069337Z  org.mobyproject.buildkit.worker.hostname:         f228d71737f3
+2025-10-18T10:22:29.4069952Z  org.mobyproject.buildkit.worker.network:          host
+2025-10-18T10:22:29.4070561Z  org.mobyproject.buildkit.worker.oci.process-mode: sandbox
+2025-10-18T10:22:29.4071193Z  org.mobyproject.buildkit.worker.selinux.enabled:  false
+2025-10-18T10:22:29.4071697Z  org.mobyproject.buildkit.worker.snapshotter:      overlayfs
+2025-10-18T10:22:29.4072007Z GC Policy rule#0:
+2025-10-18T10:22:29.4072191Z  All:            false
+2025-10-18T10:22:29.4072494Z  Filters:        type==source.local,type==exec.cachemount,type==source.git.checkout
+2025-10-18T10:22:29.4072833Z  Keep Duration:  48h0m0s
+2025-10-18T10:22:29.4073032Z  Max Used Space: 488.3MiB
+2025-10-18T10:22:29.4073220Z GC Policy rule#1:
+2025-10-18T10:22:29.4073392Z  All:            false
+2025-10-18T10:22:29.4073573Z  Keep Duration:  1440h0m0s
+2025-10-18T10:22:29.4073782Z  Reserved Space: 7.451GiB
+2025-10-18T10:22:29.4073980Z  Max Used Space: 54.02GiB
+2025-10-18T10:22:29.4074171Z  Min Free Space: 13.97GiB
+2025-10-18T10:22:29.4074361Z GC Policy rule#2:
+2025-10-18T10:22:29.4074526Z  All:            false
+2025-10-18T10:22:29.4074709Z  Reserved Space: 7.451GiB
+2025-10-18T10:22:29.4074894Z  Max Used Space: 54.02GiB
+2025-10-18T10:22:29.4075082Z  Min Free Space: 13.97GiB
+2025-10-18T10:22:29.4075260Z GC Policy rule#3:
+2025-10-18T10:22:29.4075432Z  All:            true
+2025-10-18T10:22:29.4075639Z  Reserved Space: 7.451GiB
+2025-10-18T10:22:29.4075996Z  Max Used Space: 54.02GiB
+2025-10-18T10:22:29.4076230Z  Min Free Space: 13.97GiB
+2025-10-18T10:22:29.4108675Z ##[endgroup]
+2025-10-18T10:22:29.4968813Z ##[group]Inspect builder
+2025-10-18T10:22:29.4970609Z {
+2025-10-18T10:22:29.4971008Z   "nodes": [
+2025-10-18T10:22:29.4971295Z     {
+2025-10-18T10:22:29.4971694Z       "name": "builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880",
+2025-10-18T10:22:29.4972269Z       "endpoint": "unix:///var/run/docker.sock",
+2025-10-18T10:22:29.4972739Z       "status": "running",
+2025-10-18T10:22:29.4973934Z       "buildkitd-flags": "--allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host",
+2025-10-18T10:22:29.4977363Z       "buildkit": "v0.25.1",
+2025-10-18T10:22:29.4977976Z       "platforms": "linux/amd64,linux/amd64/v2,linux/amd64/v3,linux/386",
+2025-10-18T10:22:29.4978555Z       "features": {
+2025-10-18T10:22:29.4979048Z         "Automatically load images to the Docker Engine image store": true,
+2025-10-18T10:22:29.4979641Z         "Cache export": true,
+2025-10-18T10:22:29.4980014Z         "Direct push": true,
+2025-10-18T10:22:29.4980381Z         "Docker exporter": true,
+2025-10-18T10:22:29.4980750Z         "Multi-platform build": true,
+2025-10-18T10:22:29.4981121Z         "OCI exporter": true
+2025-10-18T10:22:29.4981439Z       },
+2025-10-18T10:22:29.4981670Z       "labels": {
+2025-10-18T10:22:29.4982033Z         "org.mobyproject.buildkit.worker.executor": "oci",
+2025-10-18T10:22:29.4982587Z         "org.mobyproject.buildkit.worker.hostname": "f228d71737f3",
+2025-10-18T10:22:29.4983615Z         "org.mobyproject.buildkit.worker.network": "host",
+2025-10-18T10:22:29.4984263Z         "org.mobyproject.buildkit.worker.oci.process-mode": "sandbox",
+2025-10-18T10:22:29.4984973Z         "org.mobyproject.buildkit.worker.selinux.enabled": "false",
+2025-10-18T10:22:29.4985606Z         "org.mobyproject.buildkit.worker.snapshotter": "overlayfs"
+2025-10-18T10:22:29.4987100Z       },
+2025-10-18T10:22:29.4987395Z       "gcPolicy": [
+2025-10-18T10:22:29.4987921Z         {
+2025-10-18T10:22:29.4988232Z           "all": false,
+2025-10-18T10:22:29.4988559Z           "filter": [
+2025-10-18T10:22:29.4988904Z             "type==source.local",
+2025-10-18T10:22:29.4989301Z             "type==exec.cachemount",
+2025-10-18T10:22:29.4989737Z             "type==source.git.checkout"
+2025-10-18T10:22:29.4990132Z           ],
+2025-10-18T10:22:29.4990448Z           "keepDuration": "48h0m0s",
+2025-10-18T10:22:29.4990855Z           "maxUsedSpace": "488.3MiB"
+2025-10-18T10:22:29.4991237Z         },
+2025-10-18T10:22:29.4991537Z         {
+2025-10-18T10:22:29.4991822Z           "all": false,
+2025-10-18T10:22:29.4992173Z           "keepDuration": "1440h0m0s",
+2025-10-18T10:22:29.4992583Z           "reservedSpace": "7.451GiB",
+2025-10-18T10:22:29.4992998Z           "maxUsedSpace": "54.02GiB",
+2025-10-18T10:22:29.4993401Z           "minFreeSpace": "13.97GiB"
+2025-10-18T10:22:29.4993783Z         },
+2025-10-18T10:22:29.4994061Z         {
+2025-10-18T10:22:29.4994353Z           "all": false,
+2025-10-18T10:22:29.4994699Z           "reservedSpace": "7.451GiB",
+2025-10-18T10:22:29.4995113Z           "maxUsedSpace": "54.02GiB",
+2025-10-18T10:22:29.4995521Z           "minFreeSpace": "13.97GiB"
+2025-10-18T10:22:29.4996519Z         },
+2025-10-18T10:22:29.4996833Z         {
+2025-10-18T10:22:29.4997092Z           "all": true,
+2025-10-18T10:22:29.4997462Z           "reservedSpace": "7.451GiB",
+2025-10-18T10:22:29.4997895Z           "maxUsedSpace": "54.02GiB",
+2025-10-18T10:22:29.4998304Z           "minFreeSpace": "13.97GiB"
+2025-10-18T10:22:29.4998692Z         }
+2025-10-18T10:22:29.4998969Z       ]
+2025-10-18T10:22:29.4999212Z     }
+2025-10-18T10:22:29.4999483Z   ],
+2025-10-18T10:22:29.4999853Z   "name": "builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88",
+2025-10-18T10:22:29.5000389Z   "driver": "docker-container",
+2025-10-18T10:22:29.5000799Z   "lastActivity": "2025-10-18T10:22:26.000Z"
+2025-10-18T10:22:29.5001194Z }
+2025-10-18T10:22:29.5001748Z ##[endgroup]
+2025-10-18T10:22:29.5002269Z ##[group]BuildKit version
+2025-10-18T10:22:29.5002801Z builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880: v0.25.1
+2025-10-18T10:22:29.5003621Z ##[endgroup]
+2025-10-18T10:22:29.5141979Z ##[group]Run docker/login-action@v3
+2025-10-18T10:22:29.5142241Z with:
+2025-10-18T10:22:29.5142412Z   registry: ghcr.io
+2025-10-18T10:22:29.5142605Z   username: sema94504
+2025-10-18T10:22:29.5143035Z   password: ***
+2025-10-18T10:22:29.5143226Z   logout: true
+2025-10-18T10:22:29.5143398Z ##[endgroup]
+2025-10-18T10:22:29.8100491Z Logging into ghcr.io...
+2025-10-18T10:22:29.9873671Z Login Succeeded!
+2025-10-18T10:22:30.0019628Z ##[group]Run docker/metadata-action@v5
+2025-10-18T10:22:30.0019911Z with:
+2025-10-18T10:22:30.0020109Z   images: ghcr.io/sema94504/aidialogs-bot
+2025-10-18T10:22:30.0020922Z   tags: type=ref,event=branch,enable=false
+type=sha,prefix=2/merge-,enable=false
+type=sha,enable=true
+type=semver,pattern={{version}},enable=false
+type=semver,pattern={{major}}.{{minor}},enable=false
+type=raw,value=latest,enable=false
+
+2025-10-18T10:22:30.0021701Z   context: workflow
+2025-10-18T10:22:30.0022011Z   github-token: ***
+2025-10-18T10:22:30.0022200Z ##[endgroup]
+2025-10-18T10:22:30.7618632Z ##[group]Context info
+2025-10-18T10:22:30.7619097Z eventName: pull_request
+2025-10-18T10:22:30.7619565Z sha: 1ee66d10bdd11d6c388e5e86b9928e0677e57129
+2025-10-18T10:22:30.7620093Z ref: refs/pull/2/merge
+2025-10-18T10:22:30.7620540Z workflow: Build & Publish Docker Images
+2025-10-18T10:22:30.7621024Z action: meta
+2025-10-18T10:22:30.7621369Z actor: sema94504
+2025-10-18T10:22:30.7621725Z runNumber: 2
+2025-10-18T10:22:30.7622590Z runId: 18614385259
+2025-10-18T10:22:30.7623158Z commitDate: Sat Oct 18 2025 10:22:14 GMT+0000 (Coordinated Universal Time)
+2025-10-18T10:22:30.7628191Z ##[endgroup]
+2025-10-18T10:22:30.7631057Z ##[group]Processing images input
+2025-10-18T10:22:30.7631512Z name=ghcr.io/sema94504/aidialogs-bot,enable=true
+2025-10-18T10:22:30.7632169Z ##[endgroup]
+2025-10-18T10:22:30.7652120Z ##[group]Processing tags input
+2025-10-18T10:22:30.7652795Z type=semver,pattern={{version}},enable=false,value=,match=,priority=900
+2025-10-18T10:22:30.7653713Z type=semver,pattern={{major}}.{{minor}},enable=false,value=,match=,priority=900
+2025-10-18T10:22:30.7654504Z type=ref,event=branch,enable=false,priority=600
+2025-10-18T10:22:30.7655109Z type=raw,value=latest,enable=false,priority=200
+2025-10-18T10:22:30.7655811Z type=sha,prefix=2/merge-,enable=false,format=short,priority=100
+2025-10-18T10:22:30.7656786Z type=sha,enable=true,prefix=sha-,format=short,priority=100
+2025-10-18T10:22:30.7657639Z ##[endgroup]
+2025-10-18T10:22:30.7658284Z ##[group]Processing flavor input
+2025-10-18T10:22:30.7658725Z latest=auto
+2025-10-18T10:22:30.7659055Z prefix=
+2025-10-18T10:22:30.7659382Z prefixLatest=false
+2025-10-18T10:22:30.7659744Z suffix=
+2025-10-18T10:22:30.7660058Z suffixLatest=false
+2025-10-18T10:22:30.7660543Z ##[endgroup]
+2025-10-18T10:22:30.7701480Z ##[group]Docker image version
+2025-10-18T10:22:30.7701971Z sha-1ee66d1
+2025-10-18T10:22:30.7702704Z ##[endgroup]
+2025-10-18T10:22:30.7707847Z ##[group]Docker tags
+2025-10-18T10:22:30.7708292Z ghcr.io/sema94504/aidialogs-bot:sha-1ee66d1
+2025-10-18T10:22:30.7710707Z ##[endgroup]
+2025-10-18T10:22:30.7786166Z ##[group]Docker labels
+2025-10-18T10:22:30.7787582Z org.opencontainers.image.created=2025-10-18T10:22:30.765Z
+2025-10-18T10:22:30.7788258Z org.opencontainers.image.description=
+2025-10-18T10:22:30.7788801Z org.opencontainers.image.licenses=
+2025-10-18T10:22:30.7789531Z org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129
+2025-10-18T10:22:30.7790457Z org.opencontainers.image.source=https://github.com/sema94504/aidialogs
+2025-10-18T10:22:30.7791076Z org.opencontainers.image.title=aidialogs
+2025-10-18T10:22:30.7791659Z org.opencontainers.image.url=https://github.com/sema94504/aidialogs
+2025-10-18T10:22:30.7792264Z org.opencontainers.image.version=sha-1ee66d1
+2025-10-18T10:22:30.7792896Z ##[endgroup]
+2025-10-18T10:22:30.7793364Z ##[group]Annotations
+2025-10-18T10:22:30.7793822Z manifest:org.opencontainers.image.created=2025-10-18T10:22:30.765Z
+2025-10-18T10:22:30.7794417Z manifest:org.opencontainers.image.description=
+2025-10-18T10:22:30.7794901Z manifest:org.opencontainers.image.licenses=
+2025-10-18T10:22:30.7795576Z manifest:org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129
+2025-10-18T10:22:30.7796612Z manifest:org.opencontainers.image.source=https://github.com/sema94504/aidialogs
+2025-10-18T10:22:30.7797414Z manifest:org.opencontainers.image.title=aidialogs
+2025-10-18T10:22:30.7798249Z manifest:org.opencontainers.image.url=https://github.com/sema94504/aidialogs
+2025-10-18T10:22:30.7798722Z manifest:org.opencontainers.image.version=sha-1ee66d1
+2025-10-18T10:22:30.7799159Z ##[endgroup]
+2025-10-18T10:22:30.7799452Z ##[group]JSON output
+2025-10-18T10:22:30.7802340Z {
+2025-10-18T10:22:30.7802607Z   "tags": [
+2025-10-18T10:22:30.7802937Z     "ghcr.io/sema94504/aidialogs-bot:sha-1ee66d1"
+2025-10-18T10:22:30.7803339Z   ],
+2025-10-18T10:22:30.7803601Z   "labels": {
+2025-10-18T10:22:30.7804014Z     "org.opencontainers.image.created": "2025-10-18T10:22:30.765Z",
+2025-10-18T10:22:30.7804592Z     "org.opencontainers.image.description": "",
+2025-10-18T10:22:30.7805019Z     "org.opencontainers.image.licenses": "",
+2025-10-18T10:22:30.7805654Z     "org.opencontainers.image.revision": "1ee66d10bdd11d6c388e5e86b9928e0677e57129",
+2025-10-18T10:22:30.7806502Z     "org.opencontainers.image.source": "https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7807000Z     "org.opencontainers.image.title": "aidialogs",
+2025-10-18T10:22:30.7807859Z     "org.opencontainers.image.url": "https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7808320Z     "org.opencontainers.image.version": "sha-1ee66d1"
+2025-10-18T10:22:30.7808587Z   },
+2025-10-18T10:22:30.7808740Z   "annotations": [
+2025-10-18T10:22:30.7809024Z     "manifest:org.opencontainers.image.created=2025-10-18T10:22:30.765Z",
+2025-10-18T10:22:30.7809405Z     "manifest:org.opencontainers.image.description=",
+2025-10-18T10:22:30.7809710Z     "manifest:org.opencontainers.image.licenses=",
+2025-10-18T10:22:30.7810272Z     "manifest:org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129",
+2025-10-18T10:22:30.7811166Z     "manifest:org.opencontainers.image.source=https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7811686Z     "manifest:org.opencontainers.image.title=aidialogs",
+2025-10-18T10:22:30.7812299Z     "manifest:org.opencontainers.image.url=https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7812988Z     "manifest:org.opencontainers.image.version=sha-1ee66d1"
+2025-10-18T10:22:30.7813285Z   ]
+2025-10-18T10:22:30.7813429Z }
+2025-10-18T10:22:30.7813723Z ##[endgroup]
+2025-10-18T10:22:30.7814165Z ##[group]Bake file definition (tags)
+2025-10-18T10:22:30.7814519Z {
+2025-10-18T10:22:30.7814761Z   "target": {
+2025-10-18T10:22:30.7815050Z     "docker-metadata-action": {
+2025-10-18T10:22:30.7815387Z       "tags": [
+2025-10-18T10:22:30.7815691Z         "ghcr.io/sema94504/aidialogs-bot:sha-1ee66d1"
+2025-10-18T10:22:30.7816116Z       ],
+2025-10-18T10:22:30.7816351Z       "args": {
+2025-10-18T10:22:30.7816589Z         "DOCKER_META_IMAGES": "ghcr.io/sema94504/aidialogs-bot",
+2025-10-18T10:22:30.7817058Z         "DOCKER_META_VERSION": "sha-1ee66d1"
+2025-10-18T10:22:30.7817425Z       }
+2025-10-18T10:22:30.7817666Z     }
+2025-10-18T10:22:30.7817874Z   }
+2025-10-18T10:22:30.7818019Z }
+2025-10-18T10:22:30.7818297Z ##[endgroup]
+2025-10-18T10:22:30.7818615Z ##[group]Bake file definition (labels)
+2025-10-18T10:22:30.7818840Z {
+2025-10-18T10:22:30.7818986Z   "target": {
+2025-10-18T10:22:30.7819170Z     "docker-metadata-action": {
+2025-10-18T10:22:30.7819380Z       "labels": {
+2025-10-18T10:22:30.7819631Z         "org.opencontainers.image.created": "2025-10-18T10:22:30.765Z",
+2025-10-18T10:22:30.7819988Z         "org.opencontainers.image.description": "",
+2025-10-18T10:22:30.7820274Z         "org.opencontainers.image.licenses": "",
+2025-10-18T10:22:30.7820660Z         "org.opencontainers.image.revision": "1ee66d10bdd11d6c388e5e86b9928e0677e57129",
+2025-10-18T10:22:30.7821143Z         "org.opencontainers.image.source": "https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7821535Z         "org.opencontainers.image.title": "aidialogs",
+2025-10-18T10:22:30.7821986Z         "org.opencontainers.image.url": "https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7822370Z         "org.opencontainers.image.version": "sha-1ee66d1"
+2025-10-18T10:22:30.7822632Z       }
+2025-10-18T10:22:30.7822773Z     }
+2025-10-18T10:22:30.7822920Z   }
+2025-10-18T10:22:30.7823057Z }
+2025-10-18T10:22:30.7823486Z ##[endgroup]
+2025-10-18T10:22:30.7823838Z ##[group]Bake file definition (annotations)
+2025-10-18T10:22:30.7824066Z {
+2025-10-18T10:22:30.7824232Z   "target": {
+2025-10-18T10:22:30.7824413Z     "docker-metadata-action": {
+2025-10-18T10:22:30.7824622Z       "annotations": [
+2025-10-18T10:22:30.7824930Z         "manifest:org.opencontainers.image.created=2025-10-18T10:22:30.765Z",
+2025-10-18T10:22:30.7825329Z         "manifest:org.opencontainers.image.description=",
+2025-10-18T10:22:30.7825646Z         "manifest:org.opencontainers.image.licenses=",
+2025-10-18T10:22:30.7826226Z         "manifest:org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129",
+2025-10-18T10:22:30.7826795Z         "manifest:org.opencontainers.image.source=https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7827271Z         "manifest:org.opencontainers.image.title=aidialogs",
+2025-10-18T10:22:30.7827696Z         "manifest:org.opencontainers.image.url=https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:30.7828303Z         "manifest:org.opencontainers.image.version=sha-1ee66d1"
+2025-10-18T10:22:30.7828606Z       ]
+2025-10-18T10:22:30.7828882Z     }
+2025-10-18T10:22:30.7829047Z   }
+2025-10-18T10:22:30.7829205Z }
+2025-10-18T10:22:30.7829510Z ##[endgroup]
+2025-10-18T10:22:30.8023563Z ##[group]Run docker/build-push-action@v6
+2025-10-18T10:22:30.8023856Z with:
+2025-10-18T10:22:30.8024029Z   context: .
+2025-10-18T10:22:30.8024209Z   file: ./Dockerfile.bot
+2025-10-18T10:22:30.8024409Z   push: false
+2025-10-18T10:22:30.8024626Z   tags: ghcr.io/sema94504/aidialogs-bot:sha-1ee66d1
+2025-10-18T10:22:30.8026495Z   labels: org.opencontainers.image.created=2025-10-18T10:22:30.765Z
+org.opencontainers.image.description=
+org.opencontainers.image.licenses=
+org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129
+org.opencontainers.image.source=https://github.com/sema94504/aidialogs
+org.opencontainers.image.title=aidialogs
+org.opencontainers.image.url=https://github.com/sema94504/aidialogs
+org.opencontainers.image.version=sha-1ee66d1
+2025-10-18T10:22:30.8028071Z   cache-from: type=gha
+2025-10-18T10:22:30.8028276Z   cache-to: type=gha,mode=max
+2025-10-18T10:22:30.8028487Z   load: false
+2025-10-18T10:22:30.8028656Z   no-cache: false
+2025-10-18T10:22:30.8028888Z   pull: false
+2025-10-18T10:22:30.8029199Z   github-token: ***
+2025-10-18T10:22:30.8029404Z env:
+2025-10-18T10:22:30.8029589Z   DOCKER_METADATA_OUTPUT_VERSION: sha-1ee66d1
+2025-10-18T10:22:30.8029948Z   DOCKER_METADATA_OUTPUT_TAGS: ghcr.io/sema94504/aidialogs-bot:sha-1ee66d1
+2025-10-18T10:22:30.8031685Z   DOCKER_METADATA_OUTPUT_LABELS: org.opencontainers.image.created=2025-10-18T10:22:30.765Z
+org.opencontainers.image.description=
+org.opencontainers.image.licenses=
+org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129
+org.opencontainers.image.source=https://github.com/sema94504/aidialogs
+org.opencontainers.image.title=aidialogs
+org.opencontainers.image.url=https://github.com/sema94504/aidialogs
+org.opencontainers.image.version=sha-1ee66d1
+2025-10-18T10:22:30.8034921Z   DOCKER_METADATA_OUTPUT_ANNOTATIONS: manifest:org.opencontainers.image.created=2025-10-18T10:22:30.765Z
+manifest:org.opencontainers.image.description=
+manifest:org.opencontainers.image.licenses=
+manifest:org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129
+manifest:org.opencontainers.image.source=https://github.com/sema94504/aidialogs
+manifest:org.opencontainers.image.title=aidialogs
+manifest:org.opencontainers.image.url=https://github.com/sema94504/aidialogs
+manifest:org.opencontainers.image.version=sha-1ee66d1
+2025-10-18T10:22:30.8040330Z   DOCKER_METADATA_OUTPUT_JSON: {"tags":["ghcr.io/sema94504/aidialogs-bot:sha-1ee66d1"],"labels":{"org.opencontainers.image.created":"2025-10-18T10:22:30.765Z","org.opencontainers.image.description":"","org.opencontainers.image.licenses":"","org.opencontainers.image.revision":"1ee66d10bdd11d6c388e5e86b9928e0677e57129","org.opencontainers.image.source":"https://github.com/sema94504/aidialogs","org.opencontainers.image.title":"aidialogs","org.opencontainers.image.url":"https://github.com/sema94504/aidialogs","org.opencontainers.image.version":"sha-1ee66d1"},"annotations":["manifest:org.opencontainers.image.created=2025-10-18T10:22:30.765Z","manifest:org.opencontainers.image.description=","manifest:org.opencontainers.image.licenses=","manifest:org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129","manifest:org.opencontainers.image.source=https://github.com/sema94504/aidialogs","manifest:org.opencontainers.image.title=aidialogs","manifest:org.opencontainers.image.url=https://github.com/sema94504/aidialogs","manifest:org.opencontainers.image.version=sha-1ee66d1"]}
+2025-10-18T10:22:30.8044292Z   DOCKER_METADATA_OUTPUT_BAKE_FILE_TAGS: /home/runner/work/_temp/docker-actions-toolkit-2fyY0P/docker-metadata-action-bake-tags.json
+2025-10-18T10:22:30.8045115Z   DOCKER_METADATA_OUTPUT_BAKE_FILE_LABELS: /home/runner/work/_temp/docker-actions-toolkit-2fyY0P/docker-metadata-action-bake-labels.json
+2025-10-18T10:22:30.8046471Z   DOCKER_METADATA_OUTPUT_BAKE_FILE_ANNOTATIONS: /home/runner/work/_temp/docker-actions-toolkit-2fyY0P/docker-metadata-action-bake-annotations.json
+2025-10-18T10:22:30.8047472Z   DOCKER_METADATA_OUTPUT_BAKE_FILE: /home/runner/work/_temp/docker-actions-toolkit-2fyY0P/docker-metadata-action-bake.json
+2025-10-18T10:22:30.8047956Z ##[endgroup]
+2025-10-18T10:22:31.0871815Z ##[group]GitHub Actions runtime token ACs
+2025-10-18T10:22:31.0882010Z refs/pull/2/merge: read/write
+2025-10-18T10:22:31.0882631Z refs/heads/main: read
+2025-10-18T10:22:31.0884689Z ##[endgroup]
+2025-10-18T10:22:31.0885234Z ##[group]Docker info
+2025-10-18T10:22:31.0931214Z [command]/usr/bin/docker version
+2025-10-18T10:22:31.1111671Z Client: Docker Engine - Community
+2025-10-18T10:22:31.1112129Z  Version:           28.0.4
+2025-10-18T10:22:31.1112476Z  API version:       1.48
+2025-10-18T10:22:31.1112813Z  Go version:        go1.23.7
+2025-10-18T10:22:31.1113176Z  Git commit:        b8034c0
+2025-10-18T10:22:31.1113536Z  Built:             Tue Mar 25 15:07:16 2025
+2025-10-18T10:22:31.1113962Z  OS/Arch:           linux/amd64
+2025-10-18T10:22:31.1114299Z  Context:           default
+2025-10-18T10:22:31.1114516Z 
+2025-10-18T10:22:31.1114654Z Server: Docker Engine - Community
+2025-10-18T10:22:31.1115032Z  Engine:
+2025-10-18T10:22:31.1115324Z   Version:          28.0.4
+2025-10-18T10:22:31.1115692Z   API version:      1.48 (minimum version 1.24)
+2025-10-18T10:22:31.1116296Z   Go version:       go1.23.7
+2025-10-18T10:22:31.1116645Z   Git commit:       6430e49
+2025-10-18T10:22:31.1116994Z   Built:            Tue Mar 25 15:07:16 2025
+2025-10-18T10:22:31.1117390Z   OS/Arch:          linux/amd64
+2025-10-18T10:22:31.1117737Z   Experimental:     false
+2025-10-18T10:22:31.1118075Z  containerd:
+2025-10-18T10:22:31.1118356Z   Version:          v1.7.28
+2025-10-18T10:22:31.1118783Z   GitCommit:        b98a3aace656320842a23f4a392a33f46af97866
+2025-10-18T10:22:31.1119142Z  runc:
+2025-10-18T10:22:31.1119319Z   Version:          1.3.0
+2025-10-18T10:22:31.1119537Z   GitCommit:        v1.3.0-0-g4ca628d1
+2025-10-18T10:22:31.1119781Z  docker-init:
+2025-10-18T10:22:31.1119954Z   Version:          0.19.0
+2025-10-18T10:22:31.1120159Z   GitCommit:        de40ad0
+2025-10-18T10:22:31.1162625Z [command]/usr/bin/docker info
+2025-10-18T10:22:31.1789512Z Client: Docker Engine - Community
+2025-10-18T10:22:31.1789957Z  Version:    28.0.4
+2025-10-18T10:22:31.1790245Z  Context:    default
+2025-10-18T10:22:31.1790559Z  Debug Mode: false
+2025-10-18T10:22:31.1790857Z  Plugins:
+2025-10-18T10:22:31.1791185Z   buildx: Docker Buildx (Docker Inc.)
+2025-10-18T10:22:31.1791589Z     Version:  v0.29.1
+2025-10-18T10:22:31.1792006Z     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+2025-10-18T10:22:31.1792507Z   compose: Docker Compose (Docker Inc.)
+2025-10-18T10:22:31.1792891Z     Version:  v2.38.2
+2025-10-18T10:22:31.1793292Z     Path:     /usr/libexec/docker/cli-plugins/docker-compose
+2025-10-18T10:22:31.1793633Z 
+2025-10-18T10:22:31.1793738Z Server:
+2025-10-18T10:22:31.1794025Z  Containers: 1
+2025-10-18T10:22:31.1794332Z   Running: 1
+2025-10-18T10:22:31.1794594Z   Paused: 0
+2025-10-18T10:22:31.1794848Z   Stopped: 0
+2025-10-18T10:22:31.1795106Z  Images: 1
+2025-10-18T10:22:31.1795369Z  Server Version: 28.0.4
+2025-10-18T10:22:31.1795694Z  Storage Driver: overlay2
+2025-10-18T10:22:31.1796339Z   Backing Filesystem: extfs
+2025-10-18T10:22:31.1796678Z   Supports d_type: true
+2025-10-18T10:22:31.1796999Z   Using metacopy: false
+2025-10-18T10:22:31.1797315Z   Native Overlay Diff: false
+2025-10-18T10:22:31.1797662Z   userxattr: false
+2025-10-18T10:22:31.1797957Z  Logging Driver: json-file
+2025-10-18T10:22:31.1798289Z  Cgroup Driver: systemd
+2025-10-18T10:22:31.1798589Z  Cgroup Version: 2
+2025-10-18T10:22:31.1798904Z  Plugins:
+2025-10-18T10:22:31.1799170Z   Volume: local
+2025-10-18T10:22:31.1799511Z   Network: bridge host ipvlan macvlan null overlay
+2025-10-18T10:22:31.1800121Z   Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+2025-10-18T10:22:31.1800656Z  Swarm: inactive
+2025-10-18T10:22:31.1801291Z  Runtimes: io.containerd.runc.v2 runc
+2025-10-18T10:22:31.1801671Z  Default Runtime: runc
+2025-10-18T10:22:31.1801990Z  Init Binary: docker-init
+2025-10-18T10:22:31.1802427Z  containerd version: b98a3aace656320842a23f4a392a33f46af97866
+2025-10-18T10:22:31.1803155Z  runc version: v1.3.0-0-g4ca628d1
+2025-10-18T10:22:31.1803544Z  init version: de40ad0
+2025-10-18T10:22:31.1803862Z  Security Options:
+2025-10-18T10:22:31.1804159Z   apparmor
+2025-10-18T10:22:31.1804414Z   seccomp
+2025-10-18T10:22:31.1804678Z    Profile: builtin
+2025-10-18T10:22:31.1804960Z   cgroupns
+2025-10-18T10:22:31.1805240Z  Kernel Version: 6.14.0-1012-azure
+2025-10-18T10:22:31.1805624Z  Operating System: Ubuntu 24.04.3 LTS
+2025-10-18T10:22:31.1806215Z  OSType: linux
+2025-10-18T10:22:31.1806492Z  Architecture: x86_64
+2025-10-18T10:22:31.1806775Z  CPUs: 4
+2025-10-18T10:22:31.1807039Z  Total Memory: 15.62GiB
+2025-10-18T10:22:31.1807361Z  Name: runnervmzdgdc
+2025-10-18T10:22:31.1807859Z  ID: 0c68cb6d-35e1-4b96-a199-63d9e74069ac
+2025-10-18T10:22:31.1808294Z  Docker Root Dir: /var/lib/docker
+2025-10-18T10:22:31.1808679Z  Debug Mode: false
+2025-10-18T10:22:31.1808990Z  Username: githubactions
+2025-10-18T10:22:31.1809338Z  Experimental: false
+2025-10-18T10:22:31.1809682Z  Insecure Registries:
+2025-10-18T10:22:31.1810042Z   ::1/128
+2025-10-18T10:22:31.1810308Z   127.0.0.0/8
+2025-10-18T10:22:31.1810618Z  Live Restore Enabled: false
+2025-10-18T10:22:31.1810856Z 
+2025-10-18T10:22:31.1812929Z ##[endgroup]
+2025-10-18T10:22:31.1813443Z ##[group]Proxy configuration
+2025-10-18T10:22:31.1817190Z No proxy configuration found
+2025-10-18T10:22:31.1820601Z ##[endgroup]
+2025-10-18T10:22:31.2326606Z ##[group]Buildx version
+2025-10-18T10:22:31.2348428Z [command]/usr/bin/docker buildx version
+2025-10-18T10:22:31.3102014Z github.com/docker/buildx v0.29.1 a32761aeb3debd39be1eca514af3693af0db334b
+2025-10-18T10:22:31.3134578Z ##[endgroup]
+2025-10-18T10:22:31.3134989Z ##[group]Builder info
+2025-10-18T10:22:31.3964070Z {
+2025-10-18T10:22:31.3964460Z   "nodes": [
+2025-10-18T10:22:31.3964690Z     {
+2025-10-18T10:22:31.3964959Z       "name": "builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880",
+2025-10-18T10:22:31.3965301Z       "endpoint": "unix:///var/run/docker.sock",
+2025-10-18T10:22:31.3965572Z       "status": "running",
+2025-10-18T10:22:31.3966841Z       "buildkitd-flags": "--allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host",
+2025-10-18T10:22:31.3967376Z       "buildkit": "v0.25.1",
+2025-10-18T10:22:31.3967688Z       "platforms": "linux/amd64,linux/amd64/v2,linux/amd64/v3,linux/386",
+2025-10-18T10:22:31.3968000Z       "features": {
+2025-10-18T10:22:31.3968303Z         "Automatically load images to the Docker Engine image store": true,
+2025-10-18T10:22:31.3968630Z         "Cache export": true,
+2025-10-18T10:22:31.3968841Z         "Direct push": true,
+2025-10-18T10:22:31.3969059Z         "Docker exporter": true,
+2025-10-18T10:22:31.3969282Z         "Multi-platform build": true,
+2025-10-18T10:22:31.3969519Z         "OCI exporter": true
+2025-10-18T10:22:31.3969718Z       },
+2025-10-18T10:22:31.3969877Z       "labels": {
+2025-10-18T10:22:31.3970114Z         "org.mobyproject.buildkit.worker.executor": "oci",
+2025-10-18T10:22:31.3970476Z         "org.mobyproject.buildkit.worker.hostname": "f228d71737f3",
+2025-10-18T10:22:31.3970825Z         "org.mobyproject.buildkit.worker.network": "host",
+2025-10-18T10:22:31.3971189Z         "org.mobyproject.buildkit.worker.oci.process-mode": "sandbox",
+2025-10-18T10:22:31.3971592Z         "org.mobyproject.buildkit.worker.selinux.enabled": "false",
+2025-10-18T10:22:31.3971979Z         "org.mobyproject.buildkit.worker.snapshotter": "overlayfs"
+2025-10-18T10:22:31.3972273Z       },
+2025-10-18T10:22:31.3972423Z       "gcPolicy": [
+2025-10-18T10:22:31.3972594Z         {
+2025-10-18T10:22:31.3972753Z           "all": false,
+2025-10-18T10:22:31.3972934Z           "filter": [
+2025-10-18T10:22:31.3973126Z             "type==source.local",
+2025-10-18T10:22:31.3973351Z             "type==exec.cachemount",
+2025-10-18T10:22:31.3973848Z             "type==source.git.checkout"
+2025-10-18T10:22:31.3974066Z           ],
+2025-10-18T10:22:31.3974239Z           "keepDuration": "48h0m0s",
+2025-10-18T10:22:31.3974457Z           "maxUsedSpace": "488.3MiB"
+2025-10-18T10:22:31.3974786Z         },
+2025-10-18T10:22:31.3974939Z         {
+2025-10-18T10:22:31.3975096Z           "all": false,
+2025-10-18T10:22:31.3975292Z           "keepDuration": "1440h0m0s",
+2025-10-18T10:22:31.3975533Z           "reservedSpace": "7.451GiB",
+2025-10-18T10:22:31.3975772Z           "maxUsedSpace": "54.02GiB",
+2025-10-18T10:22:31.3976271Z           "minFreeSpace": "13.97GiB"
+2025-10-18T10:22:31.3976493Z         },
+2025-10-18T10:22:31.3976650Z         {
+2025-10-18T10:22:31.3976808Z           "all": false,
+2025-10-18T10:22:31.3977004Z           "reservedSpace": "7.451GiB",
+2025-10-18T10:22:31.3977233Z           "maxUsedSpace": "54.02GiB",
+2025-10-18T10:22:31.3977453Z           "minFreeSpace": "13.97GiB"
+2025-10-18T10:22:31.3977665Z         },
+2025-10-18T10:22:31.3977814Z         {
+2025-10-18T10:22:31.3977972Z           "all": true,
+2025-10-18T10:22:31.3978169Z           "reservedSpace": "7.451GiB",
+2025-10-18T10:22:31.3978391Z           "maxUsedSpace": "54.02GiB",
+2025-10-18T10:22:31.3978617Z           "minFreeSpace": "13.97GiB"
+2025-10-18T10:22:31.3978818Z         }
+2025-10-18T10:22:31.3978966Z       ]
+2025-10-18T10:22:31.3979109Z     }
+2025-10-18T10:22:31.3979257Z   ],
+2025-10-18T10:22:31.3979471Z   "name": "builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88",
+2025-10-18T10:22:31.3979769Z   "driver": "docker-container",
+2025-10-18T10:22:31.3980002Z   "lastActivity": "2025-10-18T10:22:26.000Z"
+2025-10-18T10:22:31.3980231Z }
+2025-10-18T10:22:31.3980622Z ##[endgroup]
+2025-10-18T10:22:31.5445120Z [command]/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --file ./Dockerfile.bot --iidfile /home/runner/work/_temp/docker-actions-toolkit-iYkD18/build-iidfile-b5a9febdef.txt --label org.opencontainers.image.created=2025-10-18T10:22:30.765Z --label org.opencontainers.image.description= --label org.opencontainers.image.licenses= --label org.opencontainers.image.revision=1ee66d10bdd11d6c388e5e86b9928e0677e57129 --label org.opencontainers.image.source=https://github.com/sema94504/aidialogs --label org.opencontainers.image.title=aidialogs --label org.opencontainers.image.url=https://github.com/sema94504/aidialogs --label org.opencontainers.image.version=sha-1ee66d1 --attest type=provenance,mode=max,builder-id=https://github.com/sema94504/aidialogs/actions/runs/18614385259/attempts/1 --tag ghcr.io/sema94504/aidialogs-bot:sha-1ee66d1 --metadata-file /home/runner/work/_temp/docker-actions-toolkit-iYkD18/build-metadata-bf52d3be28.json .
+2025-10-18T10:22:31.8832790Z #0 building with "builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88" instance using docker-container driver
+2025-10-18T10:22:31.8833220Z 
+2025-10-18T10:22:31.8833365Z #1 [internal] load build definition from Dockerfile.bot
+2025-10-18T10:22:31.8833671Z #1 transferring dockerfile: 670B done
+2025-10-18T10:22:31.8833941Z #1 DONE 0.0s
+2025-10-18T10:22:31.8834045Z 
+2025-10-18T10:22:31.8834194Z #2 [auth] library/python:pull token for registry-1.docker.io
+2025-10-18T10:22:31.8834495Z #2 DONE 0.0s
+2025-10-18T10:22:31.8834595Z 
+2025-10-18T10:22:31.8834762Z #3 [internal] load metadata for docker.io/library/python:3.11-slim
+2025-10-18T10:22:32.0597743Z #3 DONE 0.4s
+2025-10-18T10:22:32.1603101Z 
+2025-10-18T10:22:32.1603570Z #4 [internal] load .dockerignore
+2025-10-18T10:22:32.1604011Z #4 transferring context: 377B done
+2025-10-18T10:22:32.1604332Z #4 DONE 0.0s
+2025-10-18T10:22:32.1604444Z 
+2025-10-18T10:22:32.1604579Z #5 importing cache manifest from gha:9755256649332407069
+2025-10-18T10:22:32.1604946Z #5 DONE 0.0s
+2025-10-18T10:22:32.1605120Z 
+2025-10-18T10:22:32.1605266Z #6 [internal] load build context
+2025-10-18T10:22:32.1605664Z #6 transferring context: 441.76kB 0.0s done
+2025-10-18T10:22:32.1607473Z #6 DONE 0.0s
+2025-10-18T10:22:32.1607664Z 
+2025-10-18T10:22:32.1608237Z #7 [ 1/12] FROM docker.io/library/python:3.11-slim@sha256:ff8533f48e12b705fc20d339fde2ec61d0b234dd9366bab3bc84d7b70a45c8c0
+2025-10-18T10:22:32.1609543Z #7 resolve docker.io/library/python:3.11-slim@sha256:ff8533f48e12b705fc20d339fde2ec61d0b234dd9366bab3bc84d7b70a45c8c0 done
+2025-10-18T10:22:32.2873850Z #7 sha256:80061c640d6316e0810fd1007261f33680529077a173449bba4b55579c66db45 250B / 250B 0.0s done
+2025-10-18T10:22:32.2877216Z #7 sha256:76d93c681ade9d7ff7e4e590094f416d05d02ce51cb023dbb97acd48c3073470 14.36MB / 14.36MB 0.1s done
+2025-10-18T10:22:32.5330731Z #7 sha256:c72c567266265eaf3c81cecf291e32dc35cb03f44a34cc37c4bb2c3f1ca6741c 4.25MB / 4.25MB 0.1s done
+2025-10-18T10:22:32.5331899Z #7 sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 29.78MB / 29.78MB 0.2s done
+2025-10-18T10:22:32.5332862Z #7 extracting sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf
+2025-10-18T10:22:33.0199372Z #7 extracting sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 0.6s done
+2025-10-18T10:22:33.0200201Z #7 DONE 0.9s
+2025-10-18T10:22:33.1231283Z 
+2025-10-18T10:22:33.1232287Z #7 [ 1/12] FROM docker.io/library/python:3.11-slim@sha256:ff8533f48e12b705fc20d339fde2ec61d0b234dd9366bab3bc84d7b70a45c8c0
+2025-10-18T10:22:33.1233174Z #7 extracting sha256:c72c567266265eaf3c81cecf291e32dc35cb03f44a34cc37c4bb2c3f1ca6741c 0.1s done
+2025-10-18T10:22:33.1233598Z #7 DONE 1.0s
+2025-10-18T10:22:33.2740150Z 
+2025-10-18T10:22:33.2741194Z #7 [ 1/12] FROM docker.io/library/python:3.11-slim@sha256:ff8533f48e12b705fc20d339fde2ec61d0b234dd9366bab3bc84d7b70a45c8c0
+2025-10-18T10:22:33.2742348Z #7 extracting sha256:76d93c681ade9d7ff7e4e590094f416d05d02ce51cb023dbb97acd48c3073470
+2025-10-18T10:22:33.5761713Z #7 extracting sha256:76d93c681ade9d7ff7e4e590094f416d05d02ce51cb023dbb97acd48c3073470 0.5s done
+2025-10-18T10:22:33.5762328Z #7 DONE 1.5s
+2025-10-18T10:22:33.8211420Z 
+2025-10-18T10:22:33.8212327Z #7 [ 1/12] FROM docker.io/library/python:3.11-slim@sha256:ff8533f48e12b705fc20d339fde2ec61d0b234dd9366bab3bc84d7b70a45c8c0
+2025-10-18T10:22:33.8213475Z #7 extracting sha256:80061c640d6316e0810fd1007261f33680529077a173449bba4b55579c66db45 done
+2025-10-18T10:22:33.8214120Z #7 DONE 1.5s
+2025-10-18T10:22:33.8214286Z 
+2025-10-18T10:22:33.8214417Z #8 [ 2/12] WORKDIR /app
+2025-10-18T10:22:33.8214731Z #8 DONE 0.1s
+2025-10-18T10:22:33.8214890Z 
+2025-10-18T10:22:33.8215059Z #9 [ 3/12] RUN pip install --no-cache-dir uv
+2025-10-18T10:22:35.3476824Z #9 1.677 Collecting uv
+2025-10-18T10:22:35.4861987Z #9 1.709   Downloading uv-0.9.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+2025-10-18T10:22:35.4862991Z #9 1.720 Downloading uv-0.9.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (21.3 MB)
+2025-10-18T10:22:35.6958243Z #9 1.816    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 21.3/21.3 MB 315.4 MB/s eta 0:00:00
+2025-10-18T10:22:35.6958881Z #9 1.875 Installing collected packages: uv
+2025-10-18T10:22:35.8076987Z #9 2.137 Successfully installed uv-0.9.3
+2025-10-18T10:22:36.0056799Z #9 2.137 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+2025-10-18T10:22:36.0058270Z #9 2.217 
+2025-10-18T10:22:36.0058682Z #9 2.217 [notice] A new release of pip is available: 24.0 -> 25.2
+2025-10-18T10:22:36.0059273Z #9 2.217 [notice] To update, run: pip install --upgrade pip
+2025-10-18T10:22:36.0059750Z #9 DONE 2.3s
+2025-10-18T10:22:36.1694906Z 
+2025-10-18T10:22:36.1695655Z #10 [ 4/12] COPY pyproject.toml uv.lock ./
+2025-10-18T10:22:36.1696747Z #10 DONE 0.0s
+2025-10-18T10:22:36.1697086Z 
+2025-10-18T10:22:36.1697269Z #11 [ 5/12] COPY src/ ./src/
+2025-10-18T10:22:36.1697636Z #11 DONE 0.0s
+2025-10-18T10:22:36.1698088Z 
+2025-10-18T10:22:36.1698250Z #12 [ 6/12] COPY prompts/ ./prompts/
+2025-10-18T10:22:36.1698677Z #12 DONE 0.0s
+2025-10-18T10:22:36.1698860Z 
+2025-10-18T10:22:36.1698976Z #13 [ 7/12] COPY alembic/ ./alembic/
+2025-10-18T10:22:36.1699208Z #13 DONE 0.0s
+2025-10-18T10:22:36.1699670Z 
+2025-10-18T10:22:36.1699827Z #14 [ 8/12] COPY alembic.ini ./
+2025-10-18T10:22:36.1700043Z #14 DONE 0.0s
+2025-10-18T10:22:36.1700147Z 
+2025-10-18T10:22:36.1700236Z #15 [ 9/12] RUN uv sync --no-dev
+2025-10-18T10:22:36.1700823Z #15 0.096 Using CPython 3.11.14 interpreter at: /usr/local/bin/python3
+2025-10-18T10:22:36.1701203Z #15 0.096 Creating virtual environment at: .venv
+2025-10-18T10:22:36.3769368Z #15 0.104 Resolved 59 packages in 0.63ms
+2025-10-18T10:22:36.3770964Z #15 0.148 Downloading sqlalchemy (3.2MiB)
+2025-10-18T10:22:36.3771423Z #15 0.149 Downloading pydantic-core (1.9MiB)
+2025-10-18T10:22:36.3771863Z #15 0.152 Downloading aiohttp (1.7MiB)
+2025-10-18T10:22:36.3772257Z #15 0.152 Downloading uvloop (3.6MiB)
+2025-10-18T10:22:36.3892657Z #15 0.315  Downloading pydantic-core
+2025-10-18T10:22:36.5123376Z #15 0.376  Downloading aiohttp
+2025-10-18T10:22:36.5125365Z #15 0.381  Downloading uvloop
+2025-10-18T10:22:36.5125787Z #15 0.438  Downloading sqlalchemy
+2025-10-18T10:22:36.6550350Z #15 0.529 Prepared 44 packages in 422ms
+2025-10-18T10:22:36.6552116Z #15 0.580 Installed 44 packages in 51ms
+2025-10-18T10:22:36.6553369Z #15 0.580  + aiofiles==24.1.0
+2025-10-18T10:22:36.8226034Z #15 0.580  + aiogram==3.22.0
+2025-10-18T10:22:36.8227394Z #15 0.581  + aiohappyeyeballs==2.6.1
+2025-10-18T10:22:36.8227858Z #15 0.581  + aiohttp==3.12.15
+2025-10-18T10:22:36.8228219Z #15 0.581  + aiosignal==1.4.0
+2025-10-18T10:22:36.8228584Z #15 0.581  + aiosqlite==0.21.0
+2025-10-18T10:22:36.8228939Z #15 0.581  + alembic==1.17.0
+2025-10-18T10:22:36.8229355Z #15 0.581  + annotated-types==0.7.0
+2025-10-18T10:22:36.8229753Z #15 0.581  + anyio==4.11.0
+2025-10-18T10:22:36.8230064Z #15 0.581  + attrs==25.4.0
+2025-10-18T10:22:36.8230264Z #15 0.581  + certifi==2025.10.5
+2025-10-18T10:22:36.8230762Z #15 0.581  + click==8.3.0
+2025-10-18T10:22:36.8231111Z #15 0.581  + distro==1.9.0
+2025-10-18T10:22:36.8231481Z #15 0.581  + fastapi==0.119.0
+2025-10-18T10:22:36.8231857Z #15 0.581  + frozenlist==1.8.0
+2025-10-18T10:22:36.8232241Z #15 0.581  + greenlet==3.2.4
+2025-10-18T10:22:36.8232636Z #15 0.581  + h11==0.16.0
+2025-10-18T10:22:36.8232845Z #15 0.581  + httpcore==1.0.9
+2025-10-18T10:22:36.8233053Z #15 0.581  + httptools==0.7.1
+2025-10-18T10:22:36.8233673Z #15 0.581  + httpx==0.28.1
+2025-10-18T10:22:36.8234075Z #15 0.581  + idna==3.10
+2025-10-18T10:22:36.8234352Z #15 0.581  + jiter==0.11.0
+2025-10-18T10:22:36.8234559Z #15 0.581  + magic-filter==1.0.12
+2025-10-18T10:22:36.8234770Z #15 0.581  + mako==1.3.10
+2025-10-18T10:22:36.8235071Z #15 0.581  + markupsafe==3.0.3
+2025-10-18T10:22:36.8235301Z #15 0.581  + multidict==6.7.0
+2025-10-18T10:22:36.8235507Z #15 0.581  + openai==2.3.0
+2025-10-18T10:22:36.8235738Z #15 0.581  + propcache==0.4.1
+2025-10-18T10:22:36.8236279Z #15 0.581  + pydantic==2.11.10
+2025-10-18T10:22:36.8236858Z #15 0.581  + pydantic-core==2.33.2
+2025-10-18T10:22:36.8237256Z #15 0.581  + pydantic-settings==2.11.0
+2025-10-18T10:22:36.8237658Z #15 0.581  + python-dotenv==1.1.1
+2025-10-18T10:22:36.8237986Z #15 0.582  + pyyaml==6.0.3
+2025-10-18T10:22:36.8238351Z #15 0.582  + sniffio==1.3.1
+2025-10-18T10:22:36.8238705Z #15 0.582  + sqlalchemy==2.0.44
+2025-10-18T10:22:36.8239356Z #15 0.582  + starlette==0.48.0
+2025-10-18T10:22:36.8239616Z #15 0.582  + tqdm==4.67.1
+2025-10-18T10:22:36.8240067Z #15 0.582  + typing-extensions==4.15.0
+2025-10-18T10:22:36.8240734Z #15 0.582  + typing-inspection==0.4.2
+2025-10-18T10:22:36.8241145Z #15 0.582  + uvicorn==0.37.0
+2025-10-18T10:22:36.8241506Z #15 0.582  + uvloop==0.22.1
+2025-10-18T10:22:36.8241856Z #15 0.582  + watchfiles==1.1.1
+2025-10-18T10:22:36.8242219Z #15 0.582  + websockets==15.0.1
+2025-10-18T10:22:36.8242570Z #15 0.582  + yarl==1.22.0
+2025-10-18T10:22:36.8242902Z #15 DONE 0.6s
+2025-10-18T10:22:36.8243084Z 
+2025-10-18T10:22:36.8243269Z #16 [10/12] RUN mkdir -p /app/data
+2025-10-18T10:22:36.8243658Z #16 DONE 0.1s
+2025-10-18T10:22:37.0390945Z 
+2025-10-18T10:22:37.0391736Z #17 [11/12] COPY docker-entrypoint-bot.sh /usr/local/bin/
+2025-10-18T10:22:37.0392534Z #17 DONE 0.0s
+2025-10-18T10:22:37.0392734Z 
+2025-10-18T10:22:37.0393297Z #18 [12/12] RUN chmod +x /usr/local/bin/docker-entrypoint-bot.sh
+2025-10-18T10:22:37.0393768Z #18 DONE 0.1s
+2025-10-18T10:22:37.0393933Z 
+2025-10-18T10:22:37.0394077Z #19 exporting to GitHub Actions Cache
+2025-10-18T10:22:37.0394689Z #19 preparing build cache for export
+2025-10-18T10:22:39.4425472Z #19 writing layer sha256:08b9b8f996bc817460a9270239166ced4ea745d82726b51fb7ecf233a056a757
+2025-10-18T10:22:39.6183803Z #19 writing layer sha256:08b9b8f996bc817460a9270239166ced4ea745d82726b51fb7ecf233a056a757 0.2s done
+2025-10-18T10:22:39.7819892Z #19 writing layer sha256:20db44a9996a4cf15c498fd39254d8808da667804f51de76acec309c01f62426
+2025-10-18T10:22:41.4072040Z #19 writing layer sha256:20db44a9996a4cf15c498fd39254d8808da667804f51de76acec309c01f62426 1.8s done
+2025-10-18T10:22:41.5195236Z #19 writing layer sha256:347758ca5f895502ff0e7c72826a78b83d59681606e5b768dfcc177d676f1f44 0.1s done
+2025-10-18T10:22:41.5196165Z #19 writing layer sha256:4430a493a1d9a633733feedb145b465e6eed4c5d58cc2e0f227398c035c1e627
+2025-10-18T10:22:41.6948654Z #19 writing layer sha256:4430a493a1d9a633733feedb145b465e6eed4c5d58cc2e0f227398c035c1e627 0.1s done
+2025-10-18T10:22:41.6949458Z #19 writing layer sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0.1s done
+2025-10-18T10:22:41.8110151Z #19 writing layer sha256:5faba43b6bebb998752987468a738cef399fa7a066ff51336b9bd5c371ec44cd 0.1s done
+2025-10-18T10:22:41.8111100Z #19 writing layer sha256:787b1dbc824f09c3ca9c83167b839a07d9621dae93e276cf7f7f502fff449a2e
+2025-10-18T10:22:42.4308656Z #19 writing layer sha256:787b1dbc824f09c3ca9c83167b839a07d9621dae93e276cf7f7f502fff449a2e 0.6s done
+2025-10-18T10:22:42.6812661Z #19 writing layer sha256:85ef05a5097bf7362817ae9a2ddfbc79e054dfec219dc9ad5042540b63cfcc7b 0.1s done
+2025-10-18T10:22:42.6813686Z #19 writing layer sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf
+2025-10-18T10:22:44.3705788Z #19 writing layer sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 1.8s done
+2025-10-18T10:22:44.5499770Z #19 writing layer sha256:ffc216e5e01595dc31eebd7a948d729c68d07f4834be0f4a0a2e2677e3eceef9 0.1s done
+2025-10-18T10:22:44.6593244Z #19 preparing build cache for export 7.8s done
+2025-10-18T10:22:44.6597703Z #19 DONE 7.8s
+2025-10-18T10:22:44.6821128Z 
+2025-10-18T10:22:44.6821604Z #20 resolving provenance for metadata file
+2025-10-18T10:22:44.6821955Z #20 DONE 0.0s
+2025-10-18T10:22:44.6822714Z WARNING: No output specified with docker-container driver. Build result will only remain in the build cache. To push result image into registry use --push or to load image into docker use --load
+2025-10-18T10:22:44.6889724Z ##[group]Metadata
+2025-10-18T10:22:44.6890061Z {
+2025-10-18T10:22:44.6890348Z   "buildx.build.provenance": {
+2025-10-18T10:22:44.6890724Z     "builder": {
+2025-10-18T10:22:44.6891261Z       "id": "https://github.com/sema94504/aidialogs/actions/runs/18614385259/attempts/1"
+2025-10-18T10:22:44.6891853Z     },
+2025-10-18T10:22:44.6892215Z     "buildType": "https://mobyproject.org/buildkit@v1",
+2025-10-18T10:22:44.6892698Z     "materials": [
+2025-10-18T10:22:44.6892978Z       {
+2025-10-18T10:22:44.6893374Z         "uri": "pkg:docker/python@3.11-slim?platform=linux%2Famd64",
+2025-10-18T10:22:44.6893851Z         "digest": {
+2025-10-18T10:22:44.6894360Z           "sha256": "ff8533f48e12b705fc20d339fde2ec61d0b234dd9366bab3bc84d7b70a45c8c0"
+2025-10-18T10:22:44.6894943Z         }
+2025-10-18T10:22:44.6895186Z       }
+2025-10-18T10:22:44.6895435Z     ],
+2025-10-18T10:22:44.6895687Z     "invocation": {
+2025-10-18T10:22:44.6896189Z       "configSource": {
+2025-10-18T10:22:44.6896533Z         "entryPoint": "Dockerfile.bot"
+2025-10-18T10:22:44.6896913Z       },
+2025-10-18T10:22:44.6897172Z       "parameters": {
+2025-10-18T10:22:44.6897552Z         "frontend": "dockerfile.v0",
+2025-10-18T10:22:44.6897912Z         "args": {
+2025-10-18T10:22:44.6898374Z           "label:org.opencontainers.image.created": "2025-10-18T10:22:30.765Z",
+2025-10-18T10:22:44.6899014Z           "label:org.opencontainers.image.description": "",
+2025-10-18T10:22:44.6899598Z           "label:org.opencontainers.image.licenses": "",
+2025-10-18T10:22:44.6900026Z           "label:org.opencontainers.image.revision": "1ee66d10bdd11d6c388e5e86b9928e0677e57129",
+2025-10-18T10:22:44.6900668Z           "label:org.opencontainers.image.source": "https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:44.6901328Z           "label:org.opencontainers.image.title": "aidialogs",
+2025-10-18T10:22:44.6902007Z           "label:org.opencontainers.image.url": "https://github.com/sema94504/aidialogs",
+2025-10-18T10:22:44.6902705Z           "label:org.opencontainers.image.version": "sha-1ee66d1"
+2025-10-18T10:22:44.6903173Z         },
+2025-10-18T10:22:44.6903335Z         "locals": [
+2025-10-18T10:22:44.6903503Z           {
+2025-10-18T10:22:44.6903663Z             "name": "context"
+2025-10-18T10:22:44.6903859Z           },
+2025-10-18T10:22:44.6904006Z           {
+2025-10-18T10:22:44.6904169Z             "name": "dockerfile"
+2025-10-18T10:22:44.6904367Z           }
+2025-10-18T10:22:44.6904515Z         ]
+2025-10-18T10:22:44.6904656Z       },
+2025-10-18T10:22:44.6904810Z       "environment": {
+2025-10-18T10:22:44.6905005Z         "platform": "linux/amd64",
+2025-10-18T10:22:44.6905270Z         "ProvenanceCustomEnv": null
+2025-10-18T10:22:44.6905486Z       }
+2025-10-18T10:22:44.6905678Z     }
+2025-10-18T10:22:44.6905828Z   },
+2025-10-18T10:22:44.6906821Z   "buildx.build.ref": "builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88/builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880/2qiaw3uzwvaxwrzwh1ryafnt7"
+2025-10-18T10:22:44.6907414Z }
+2025-10-18T10:22:44.6907733Z ##[endgroup]
+2025-10-18T10:22:44.6908023Z ##[group]Reference
+2025-10-18T10:22:44.6908462Z builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88/builder-3a027fd4-f16a-4f3d-b992-4d401d00bf880/2qiaw3uzwvaxwrzwh1ryafnt7
+2025-10-18T10:22:44.6909105Z ##[endgroup]
+2025-10-18T10:22:44.6909422Z ##[group]Check build summary support
+2025-10-18T10:22:44.6909819Z Build summary supported!
+2025-10-18T10:22:44.6910144Z ##[endgroup]
+2025-10-18T10:22:44.7041555Z Post job cleanup.
+2025-10-18T10:22:44.9812416Z ##[group]Generating build summary
+2025-10-18T10:22:44.9819820Z exporting build record to /home/runner/work/_temp/docker-actions-toolkit-8I4GBn/export
+2025-10-18T10:22:45.1369079Z [command]/usr/bin/docker buildx history export --builder builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88 --output /home/runner/work/_temp/docker-actions-toolkit-8I4GBn/export/sema94504~aidialogs~2QIAW3.dockerbuild 2qiaw3uzwvaxwrzwh1ryafnt7 --finalize
+2025-10-18T10:22:45.3433986Z Build record written to /home/runner/work/_temp/docker-actions-toolkit-8I4GBn/export/sema94504~aidialogs~2QIAW3.dockerbuild (35.67 KB)
+2025-10-18T10:22:45.3460592Z Uploading sema94504~aidialogs~2QIAW3.dockerbuild to blob storage
+2025-10-18T10:22:45.4242616Z Beginning upload of artifact content to blob storage
+2025-10-18T10:22:45.4350018Z Uploaded bytes 36530
+2025-10-18T10:22:45.4619793Z Finished uploading artifact content to blob storage!
+2025-10-18T10:22:45.4625811Z SHA256 hash of uploaded artifact is 3f9bd74f1a5dbcd57e7d874c89457068b8f6fccceb86be4c4e79f3be8d6c4d6e
+2025-10-18T10:22:45.4627552Z Finalizing artifact upload
+2025-10-18T10:22:45.5863687Z Artifact successfully finalized (4306842730)
+2025-10-18T10:22:45.5866720Z Artifact download URL: https://github.com/sema94504/aidialogs/actions/runs/18614385259/artifacts/4306842730
+2025-10-18T10:22:45.5892808Z Writing summary
+2025-10-18T10:22:45.5906734Z ##[endgroup]
+2025-10-18T10:22:45.5907826Z ##[group]Removing temp folder /home/runner/work/_temp/docker-actions-toolkit-iYkD18
+2025-10-18T10:22:45.5932161Z ##[endgroup]
+2025-10-18T10:22:45.5932838Z ##[group]Post cache
+2025-10-18T10:22:45.5933174Z State not set
+2025-10-18T10:22:45.5933696Z ##[endgroup]
+2025-10-18T10:22:45.6056635Z Post job cleanup.
+2025-10-18T10:22:45.9042136Z [command]/usr/bin/docker logout ghcr.io
+2025-10-18T10:22:45.9168667Z Removing login credentials for ghcr.io
+2025-10-18T10:22:45.9201421Z ##[group]Post cache
+2025-10-18T10:22:45.9203213Z State not set
+2025-10-18T10:22:45.9204560Z ##[endgroup]
+2025-10-18T10:22:45.9358608Z Post job cleanup.
+2025-10-18T10:22:46.2111595Z ##[group]Removing builder
+2025-10-18T10:22:46.2996248Z [command]/usr/bin/docker buildx rm builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88
+2025-10-18T10:22:46.7803364Z builder-3a027fd4-f16a-4f3d-b992-4d401d00bf88 removed
+2025-10-18T10:22:46.7838654Z ##[endgroup]
+2025-10-18T10:22:46.7839227Z ##[group]Cleaning up certificates
+2025-10-18T10:22:46.7844945Z ##[endgroup]
+2025-10-18T10:22:46.7845487Z ##[group]Post cache
+2025-10-18T10:22:46.7847964Z State not set
+2025-10-18T10:22:46.7848883Z ##[endgroup]
+2025-10-18T10:22:46.8002211Z Post job cleanup.
+2025-10-18T10:22:46.8958181Z [command]/usr/bin/git version
+2025-10-18T10:22:46.9003473Z git version 2.51.0
+2025-10-18T10:22:46.9047120Z Temporarily overriding HOME='/home/runner/work/_temp/4834189e-3b6f-45f6-8106-05f0b2fcacf5' before making global git config changes
+2025-10-18T10:22:46.9048077Z Adding repository directory to the temporary git global config as a safe directory
+2025-10-18T10:22:46.9052420Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aidialogs/aidialogs
+2025-10-18T10:22:46.9086582Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-10-18T10:22:46.9118380Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-10-18T10:22:46.9343317Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-10-18T10:22:46.9365074Z http.https://github.com/.extraheader
+2025-10-18T10:22:46.9377911Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-10-18T10:22:46.9408373Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-10-18T10:22:46.9737955Z Cleaning up orphan processes

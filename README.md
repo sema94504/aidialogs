@@ -71,7 +71,7 @@ LLM_MODEL=gpt-oss:latest
 SYSTEM_PROMPT_FILE=prompts/system_prompt.txt
 ```
 
-## Запуск
+### Запуск
 
 ### Docker (рекомендуется)
 
@@ -80,6 +80,30 @@ SYSTEM_PROMPT_FILE=prompts/system_prompt.txt
 #### Требования
 - Docker
 - Docker Compose
+
+#### Использование Docker Compose (новый способ)
+
+Для развёртывания системы с pre-built образами из GitHub Container Registry используйте docker-compose:
+
+```bash
+# Скопируйте пример переменных окружения
+cp .env.example .env
+
+# Отредактируйте .env с реальными значениями
+nano .env
+
+# Запустите сервисы
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+# Для локальной разработки используйте:
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+Подробнее см. [DOCKER.md](./DOCKER.md) - полная документация по docker-compose конфигурации, сервисам, healthchecks и управлению.
+
+#### Традиционный способ (через Makefile)
+
+Запуск всех сервисов (Bot, API, Frontend) одной командой через Docker Compose:
 
 #### Первый запуск
 

@@ -1,168 +1,114 @@
-# Docker Quick Start
+# Docker Compose Setup
 
-## Быстрый старт
+## Структура
 
-### 1. Подготовка
+- **docker-compose.yml** — основная конфигурация с pre-built образами из GHCR
+- **docker-compose.prod.yml** — production overrides (более строгие лимиты, лучшее логирование)
+- **docker-compose.dev.yml** — локальная разработка (сборка из Dockerfile, volume binds)
+- **.env.example** — пример переменных окружения
 
-Скопируйте шаблон конфигурации и настройте переменные окружения:
+## Структура сервисов
 
-```bash
-cp env.docker.template .env.docker
-```
+### sqlite
+Volume для SQLite БД (монтируется в bot и api)
 
-Отредактируйте `.env.docker`:
-- Укажите реальный `TELEGRAM_BOT_TOKEN`
-- При необходимости измените `LLM_BASE_URL` (по умолчанию: `http://host.docker.internal:3000/v1`)
+### bot
+- Образ: ghcr.io/sema94504/bot:latest
+- Зависит от: sqlite
+- Лимиты: 256M RAM, 0.5 CPU (dev), 384M/0.75 CPU (prod)
+- Переменные: TELEGRAM_BOT_TOKEN, LLM_BASE_URL, LLM_MODEL, SYSTEM_PROMPT_FILE, LOG_LEVEL
 
-### 2. Запуск
+### api
+- Образ: ghcr.io/sema94504/api:latest
+- Зависит от: sqlite
+- Порт: 8063:8000
+- Healthcheck: /health (30s interval в dev, 15s в prod)
+- Лимиты: 512M RAM, 1 CPU (dev), 768M/1.5 CPU (prod)
 
-```bash
-# Сборка образов
-make docker-build
+### frontend
+- Образ: ghcr.io/sema94504/frontend:latest
+- Зависит от: api
+- Порт: 3063:3000
+- Healthcheck: / (30s interval в dev, 15s в prod)
+- Лимиты: 256M RAM, 0.5 CPU (dev), 384M/0.75 CPU (prod)
 
-# Запуск всех сервисов
-make docker-up
+## Использование
 
-# Проверка статуса
-make docker-status
-```
-
-### 3. Доступные сервисы
-
-После запуска доступны:
-
-- **Frontend**: http://localhost:3000 - веб-интерфейс
-- **API**: http://localhost:8000 - REST API
-- **API Docs**: http://localhost:8000/docs - документация API
-- **Health Check**: http://localhost:8000/health - проверка работоспособности
-
-### 4. Просмотр логов
+### Production (с pre-built образами)
 
 ```bash
-# Все сервисы
-make docker-logs
-
-# Отдельные сервисы
-make docker-logs-bot
-make docker-logs-api
-make docker-logs-frontend
+cp .env.example .env
+# Отредактировать .env с реальными значениями
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-### 5. Управление
+### Локальная разработка (с сборкой из Dockerfile)
 
 ```bash
-# Остановка
-make docker-down
-
-# Перезапуск
-make docker-down && make docker-up
-
-# Пересборка после изменений
-make docker-build
-make docker-up
-
-# Полная очистка (удаляет контейнеры и volumes)
-make docker-clean
+cp .env.example .env
+docker-compose -f docker-compose.dev.yml up -d
 ```
 
-## Архитектура
+## Network и Volumes
 
-```
-Frontend (3000) → API (8000) → Bot → SQLite DB (./data/)
-```
+- **Network**: aidialogs_network (bridge)
+- **Volumes**: 
+  - db_volume (для SQLite)
+  - logs_volume (для логов)
 
-- **Bot** и **API** используют общий volume `./data/` для доступа к SQLite БД
-- **Frontend** подключается к API через прокси Next.js
-- Все сервисы в одной сети `aidialogs-network`
+## Logging
 
-## База данных
+Все сервисы используют json-file driver с ротацией:
+- Production: max-size 50m, max-file 5
+- Development: max-size 1m, max-file 1
 
-SQLite БД (`aidialogs.db`) хранится в `./data/` на хосте.
+## Healthchecks
 
-**Важно**: Перед первым запуском выполните миграции Alembic:
+API и Frontend имеют healthchecks:
+
+**Development:**
+- Interval: 30s
+- Timeout: 10s
+- Retries: 3
+- Start period: 10-15s
+
+**Production:**
+- Interval: 15s
+- Timeout: 5s
+- Retries: 5
+- Start period: 30s
+
+## Restart Policy
+
+- Production: always
+- Development: unless-stopped
+
+## Отладка
 
 ```bash
-# Если БД еще не создана
-uv run alembic upgrade head
-```
+# Логи сервиса
+docker-compose logs -f <service>
 
-Или создайте пустую БД вручную и запустите контейнеры - bot выполнит миграции автоматически.
+# Статус контейнеров
+docker-compose ps
 
-## Устранение проблем
-
-### Контейнеры не запускаются
-
-```bash
-# Проверьте логи
-make docker-logs
-
-# Проверьте, что порты 3000 и 8000 свободны
-netstat -tuln | grep -E ':(3000|8000)'
-```
-
-### БД не создается
-
-```bash
-# Проверьте права на директорию data
-ls -la ./data/
-
-# Убедитесь, что DATABASE_PATH в .env.docker указывает на /app/data/aidialogs.db
-```
-
-### LLM не отвечает
-
-```bash
-# Проверьте LLM_BASE_URL в .env.docker
-# Для доступа к локальному сервису на хосте используйте:
-LLM_BASE_URL=http://host.docker.internal:3000/v1
-```
-
-## Разработка
-
-Для разработки с hot-reload используйте отдельные команды:
-
-```bash
-# Bot (локально)
-make run
-
-# API (локально)
-make run-api
-
-# Frontend (локально)
-make frontend-dev
-```
-
-Это позволит быстрее итерироваться без пересборки Docker образов.
-
-## GitHub Container Registry (ghcr.io)
-
-Образы автоматически собираются и публикуются в GitHub Container Registry при push в main/develop.
-
-### Workflow автоматизации
-
-Файл `.github/workflows/build.yml`:
-- Запускается автоматически при push в main, develop и на release tags
-- Собирает образы всех 3 сервисов параллельно
-- Публикует в `ghcr.io/<owner>/aidialogs-{service}:latest`
-- Использует кэширование Docker layers для скорости
-
-### Использование образов из registry
-
-```bash
-# Загрузить образы
-make registry-pull GITHUB_USER=<your-username>
-
-# Запустить сервисы
-make registry-up GITHUB_USER=<your-username>
+# Выполнить команду в контейнере
+docker-compose exec <service> <command>
 
 # Остановить
-make registry-down
+docker-compose down
+
+# Полная очистка (удаляет контейнеры и volumes)
+docker-compose down -v
 ```
 
-**Важно:** Образы по умолчанию приватные. Сделайте их публичными в настройках package на GitHub.
+## Директории монтирования
 
-Подробнее см:
-- `.github/REGISTRY.md` - настройка registry
-- `docs/REGISTRY.md` - полная инструкция
-- `docs/github-actions-guide.md` - как работает workflow
+Убедитесь, что созданы необходимые директории (для production):
+
+```bash
+sudo mkdir -p /var/lib/aidialogs/data
+sudo mkdir -p /var/log/aidialogs
+sudo chown -R $(id -u):$(id -g) /var/lib/aidialogs /var/log/aidialogs
+```
 
