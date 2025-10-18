@@ -283,4 +283,3 @@ async def test_different_days_parameter(db, collector):
 
     assert len(stats_7.activity_chart) == 7
     assert len(stats_14.activity_chart) == 14
-
