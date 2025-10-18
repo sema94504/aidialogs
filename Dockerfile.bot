@@ -1,0 +1,26 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Установка UV
+RUN pip install --no-cache-dir uv
+
+# Копирование файлов проекта
+COPY pyproject.toml uv.lock ./
+COPY src/ ./src/
+COPY prompts/ ./prompts/
+COPY alembic/ ./alembic/
+COPY alembic.ini ./
+
+# Установка зависимостей
+RUN uv sync --no-dev
+
+# Создание директории для данных
+RUN mkdir -p /app/data
+
+# Копирование entrypoint скрипта
+COPY docker-entrypoint-bot.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-bot.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-bot.sh"]
+

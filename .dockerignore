@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Tests
+.pytest_cache/
+htmlcov/
+.coverage
+*.log
+
+# Node
+node_modules/
+.next/
+out/
+
+# Database
+*.db
+*.db-journal
+
+# Environment
+.env
+.env.*
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+
+# Other
+*.md
+!README.md
+docs/
+tests/
+frontend/README.md
+

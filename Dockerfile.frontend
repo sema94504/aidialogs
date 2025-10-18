@@ -1,0 +1,23 @@
+FROM node:23-slim
+
+WORKDIR /app
+
+# Установка pnpm
+RUN npm install -g pnpm
+
+# Копирование файлов проекта
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+
+# Установка зависимостей
+RUN pnpm install --frozen-lockfile
+
+# Копирование остальных файлов
+COPY frontend/ ./
+
+# Сборка приложения
+RUN pnpm build
+
+EXPOSE 3000
+
+CMD ["pnpm", "start"]
+

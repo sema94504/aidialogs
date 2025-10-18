@@ -71,6 +71,62 @@ SYSTEM_PROMPT_FILE=prompts/system_prompt.txt
 
 ## Запуск
 
+### Docker (рекомендуется)
+
+Запуск всех сервисов (Bot, API, Frontend) одной командой через Docker Compose:
+
+#### Требования
+- Docker
+- Docker Compose
+
+#### Первый запуск
+
+1. Скопируйте шаблон конфигурации:
+```bash
+cp env.docker.template .env.docker
+```
+
+2. Отредактируйте `.env.docker` и укажите реальный `TELEGRAM_BOT_TOKEN`
+
+3. Запустите сервисы:
+```bash
+make docker-build
+make docker-up
+```
+
+#### Доступные сервисы
+
+- **Frontend**: http://localhost:3000
+- **API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
+#### Управление
+
+```bash
+# Запуск сервисов
+make docker-up
+
+# Остановка сервисов
+make docker-down
+
+# Просмотр логов всех сервисов
+make docker-logs
+
+# Просмотр логов отдельного сервиса
+make docker-logs-bot
+make docker-logs-api
+make docker-logs-frontend
+
+# Статус сервисов
+make docker-status
+
+# Пересборка образов
+make docker-build
+
+# Полная очистка (удаление контейнеров и volumes)
+make docker-clean
+```
+
 ### Разработка (интерактивный режим)
 
 ```bash
@@ -83,72 +139,7 @@ make run
 uv run python -m src.main
 ```
 
-<<<<<<< HEAD
-### Развертывание как демон (production)
-
-Бот работает как systemd сервис с автоматическим перезапуском и обновлением из git.
-
-#### 1. Установка сервисов
-
-```bash
-make install-services
-```
-
-Это установит два systemd сервиса:
-- `aidialogs-bot` - основной бот
-- `aidialogs-watcher` - мониторинг git-репозитория
-
-#### 2. Управление сервисами
-
-Запуск:
-```bash
-make start
-```
-
-Остановка:
-```bash
-make stop
-```
-
-Статус:
-```bash
-make status
-```
-
-#### 3. Просмотр логов
-
-Логи основного бота:
-```bash
-make logs
-```
-
-Логи git-watcher:
-```bash
-make logs-watcher
-```
-
-Или напрямую через journalctl:
-```bash
-sudo journalctl -u aidialogs-bot -f
-sudo journalctl -u aidialogs-watcher -f
-```
-
-#### 4. Автоматическое обновление
-
-Git-watcher проверяет репозиторий каждую минуту:
-- Выполняет `git fetch origin main`
-- Сравнивает локальный и удаленный HEAD
-- При обнаружении изменений: выполняет `git pull` и перезапускает бот
-
-Логи автоматических обновлений:
-```bash
-tail -f /opt/aidialogs/git-watcher.log
-```
-
-### Запуск тестов
-=======
 ### Остановка бота
->>>>>>> 96f7c63efba3c190b70bf52c67545d1de47b7e16
 
 Нажмите `Ctrl+C` для остановки бота.
 
@@ -219,21 +210,12 @@ make coverage   # 5. Проверить покрытие
 ```
 aidialogs/
 ├── src/
-<<<<<<< HEAD
-│   ├── main.py          # точка входа
-│   ├── bot.py           # TelegramBot класс
-│   ├── llm_client.py    # LLMClient класс
-│   └── config.py        # Config класс
-├── scripts/
-│   └── git-watcher.sh   # скрипт мониторинга git
-=======
 │   ├── main.py              # точка входа
 │   ├── bot.py               # TelegramBot класс
 │   ├── llm_client.py        # LLMClient класс
 │   ├── config.py            # Config класс (pydantic-settings)
 │   ├── database.py          # DatabaseManager класс
 │   └── session_manager.py   # SessionManager класс
->>>>>>> 96f7c63efba3c190b70bf52c67545d1de47b7e16
 ├── tests/
 │   ├── test_bot.py              # тесты Bot
 │   ├── test_llm_client.py       # тесты LLMClient
@@ -245,16 +227,6 @@ aidialogs/
 │   ├── env.py               # Alembic environment
 │   └── versions/            # миграции БД
 ├── docs/
-<<<<<<< HEAD
-│   ├── vision.md        # техническое видение
-│   └── tasklist.md      # план разработки
-├── .env                 # конфигурация (не в git)
-├── .env.example         # пример конфигурации
-├── Makefile             # команды для запуска
-├── pyproject.toml       # зависимости проекта
-├── aidialogs-bot.service     # systemd unit основного бота
-└── aidialogs-watcher.service # systemd unit git-watcher
-=======
 │   ├── idea.md              # описание идеи
 │   ├── vision.md            # техническое видение
 │   └── archive/             # завершенные документы
@@ -268,7 +240,6 @@ aidialogs/
 ├── Makefile                 # команды для запуска
 ├── pyproject.toml           # зависимости и настройки
 └── pytest.ini               # настройки pytest
->>>>>>> 96f7c63efba3c190b70bf52c67545d1de47b7e16
 ```
 
 ## Архитектура

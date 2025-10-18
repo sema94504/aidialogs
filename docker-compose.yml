@@ -1,0 +1,42 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: aidialogs-bot
+    network_mode: bridge
+    env_file:
+      - .env.docker
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: aidialogs-api
+    network_mode: bridge
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.docker
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: aidialogs-frontend
+    network_mode: bridge
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - API_URL=http://aidialogs-api:8000
+    restart: unless-stopped
+    links:
+      - api:aidialogs-api
+
