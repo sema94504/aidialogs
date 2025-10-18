@@ -1,4 +1,4 @@
-.PHONY: help lint format typecheck test coverage run run-api test-api clean install-services start stop status logs logs-watcher
+.PHONY: help lint format typecheck test coverage run run-api run-api-mock test-api clean install-services start stop status logs logs-watcher
 .PHONY: frontend-dev frontend-lint frontend-typecheck frontend-build
 
 .DEFAULT_GOAL := help
@@ -10,7 +10,8 @@ help:
 	@echo ""
 	@echo "Backend (Python):"
 	@echo "  make run              Run Telegram bot"
-	@echo "  make run-api          Run API server (Mock)"
+	@echo "  make run-api          Run API server (Real DB)"
+	@echo "  make run-api-mock     Run API server (Mock data)"
 	@echo "  make test             Run tests"
 	@echo "  make coverage         Run tests with coverage"
 	@echo "  make lint             Run linter (ruff)"
@@ -57,6 +58,9 @@ run:
 
 run-api:
 	uv run uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
+
+run-api-mock:
+	USE_MOCK_STATS=true uv run uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
 
 test-api:
 	@echo "Testing API endpoint..."
