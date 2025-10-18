@@ -7,6 +7,7 @@ import { PeriodFilter } from "@/components/dashboard/period-filter";
 import { MetricsCards } from "@/components/dashboard/metrics-cards";
 import { ActivityChart } from "@/components/dashboard/activity-chart";
 import { RecentMessages } from "@/components/dashboard/recent-messages";
+import ChatContainer from "@/components/chat/chat-container";
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState<number>(7);
@@ -109,6 +110,8 @@ export default function DashboardPage() {
       <section aria-label="Последние сообщения">
         <RecentMessages messages={data.recent_messages} />
       </section>
+
+      <ChatContainer />
     </div>
   );
 }
