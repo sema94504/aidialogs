@@ -1,0 +1,233 @@
+name: CD - Deploy to Server
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "echo 'SSH connection successful'"
+
+      - name: Prepare deployment directory
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "mkdir -p ${{ secrets.DEPLOY_PATH }}"
+
+      - name: Copy docker-compose files
+        run: |
+          scp -i ~/.ssh/deploy_key docker-compose.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/
+          scp -i ~/.ssh/deploy_key docker-compose.prod.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/
+
+      - name: Backup current images
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          set -e
+          cd ${{ secrets.DEPLOY_PATH }}
+          
+          mkdir -p backup
+          
+          for image in aidialogs-bot aidialogs-api aidialogs-frontend; do
+            if docker images --quiet ghcr.io/sema94504/$image:latest > /dev/null 2>&1; then
+              docker tag ghcr.io/sema94504/$image:latest ghcr.io/sema94504/$image:backup-$(date +%s)
+              echo "Backed up $image"
+            fi
+          done
+          
+          echo "Backup completed"
+          EOF
+
+      - name: Login to ghcr.io
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          EOF
+
+      - name: Pull new images
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          set -e
+          docker pull ghcr.io/sema94504/aidialogs-bot:latest
+          docker pull ghcr.io/sema94504/aidialogs-api:latest
+          docker pull ghcr.io/sema94504/aidialogs-frontend:latest
+          echo "All images pulled successfully"
+          EOF
+
+      - name: Deploy with docker-compose
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          set -e
+          cd ${{ secrets.DEPLOY_PATH }}
+          
+          docker-compose -f docker-compose.prod.yml down || true
+          docker-compose -f docker-compose.prod.yml up -d --no-deps --build
+          
+          echo "Waiting for containers to be healthy..."
+          sleep 10
+          EOF
+
+      - name: Verify deployment - Container status
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          echo "Container Status:"
+          docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+          
+          if ! docker ps --format "{{.Names}}" | grep -q aidialogs-api; then
+            echo "ERROR: API container not running"
+            exit 1
+          fi
+          if ! docker ps --format "{{.Names}}" | grep -q aidialogs-frontend; then
+            echo "ERROR: Frontend container not running"
+            exit 1
+          fi
+          EOF
+
+      - name: Verify deployment - Health endpoints
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          set +e
+          
+          echo "Checking API health endpoint..."
+          for i in {1..5}; do
+            if curl -f http://localhost:8000/health 2>/dev/null; then
+              echo "✓ API health check passed"
+              break
+            fi
+            if [ $i -eq 5 ]; then
+              echo "✗ API health check failed after 5 attempts"
+              exit 1
+            fi
+            echo "Attempt $i/5 - retrying..."
+            sleep 3
+          done
+          
+          echo "Checking Frontend health endpoint..."
+          for i in {1..5}; do
+            if curl -f http://localhost:3000/ 2>/dev/null > /dev/null; then
+              echo "✓ Frontend health check passed"
+              break
+            fi
+            if [ $i -eq 5 ]; then
+              echo "✗ Frontend health check failed after 5 attempts"
+              exit 1
+            fi
+            echo "Attempt $i/5 - retrying..."
+            sleep 3
+          done
+          EOF
+
+      - name: Collect logs on failure
+        if: failure()
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF' > /tmp/deploy-logs.txt 2>&1 || true
+          echo "=== Container Status ==="
+          docker ps -a
+          
+          echo -e "\n=== Last 50 lines of Bot logs ==="
+          docker logs --tail 50 $(docker ps -a --filter "name=aidialogs-bot" -q) 2>/dev/null || echo "Bot logs not available"
+          
+          echo -e "\n=== Last 50 lines of API logs ==="
+          docker logs --tail 50 $(docker ps -a --filter "name=aidialogs-api" -q) 2>/dev/null || echo "API logs not available"
+          
+          echo -e "\n=== Last 50 lines of Frontend logs ==="
+          docker logs --tail 50 $(docker ps -a --filter "name=aidialogs-frontend" -q) 2>/dev/null || echo "Frontend logs not available"
+          
+          echo -e "\n=== Docker images ==="
+          docker images | grep ghcr.io || echo "No ghcr.io images found"
+          EOF
+          cat /tmp/deploy-logs.txt || true
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          set -e
+          echo "Rolling back to previous version..."
+          cd ${{ secrets.DEPLOY_PATH }}
+          
+          for backup_image in $(docker images --filter "reference=ghcr.io/sema94504/*:backup-*" --format "{{.Repository}}:{{.Tag}}" | sort -r | head -3); do
+            base_image=$(echo "$backup_image" | sed 's/:backup-.*//')
+            docker tag "$backup_image" "$base_image:latest"
+            echo "Restored $backup_image to $base_image:latest"
+          done
+          
+          docker-compose -f docker-compose.prod.yml down || true
+          docker-compose -f docker-compose.prod.yml up -d --no-deps
+          
+          echo "Rollback completed. Waiting for containers..."
+          sleep 10
+          
+          echo "Verifying rollback..."
+          docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+          EOF
+
+      - name: Cleanup
+        if: success()
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          echo "Cleaning up old images and volumes..."
+          
+          docker image prune -f
+          docker volume prune -f
+          
+          echo "Cleanup completed"
+          docker images | grep ghcr.io
+          EOF
+
+      - name: Send success notification
+        if: success()
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          EMAIL_BODY="Deployment successful!
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Actor: ${{ github.actor }}
+          
+          Deployment Status: SUCCESS
+          Timestamp: $(date)"
+          
+          echo "$EMAIL_BODY" | mail -s "[aidialogs] Deployment successful" semapv@gmail.com 2>/dev/null || echo "Email notification skipped (sendmail not configured)"
+          EOF
+
+      - name: Send failure notification
+        if: failure()
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          EMAIL_BODY="Deployment FAILED!
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Actor: ${{ github.actor }}
+          
+          Deployment Status: FAILED - Rollback executed
+          Timestamp: $(date)
+          
+          Please check the workflow run for details."
+          
+          echo "$EMAIL_BODY" | mail -s "[aidialogs] Deployment FAILED - Rollback" semapv@gmail.com 2>/dev/null || echo "Email notification skipped (sendmail not configured)"
+          EOF
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
