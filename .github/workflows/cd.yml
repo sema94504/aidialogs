@@ -25,21 +25,21 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "echo 'SSH connection successful'"
+          ssh-keyscan -p ${{ secrets.DEPLOY_PORT || 22 }} -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "echo 'SSH connection successful'"
 
       - name: Prepare deployment directory
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "mkdir -p ${{ secrets.DEPLOY_PATH }}"
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "mkdir -p ${{ secrets.DEPLOY_PATH }}"
 
       - name: Copy docker-compose files
         run: |
-          scp -i ~/.ssh/deploy_key docker-compose.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/
-          scp -i ~/.ssh/deploy_key docker-compose.prod.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/
+          scp -P ${{ secrets.DEPLOY_PORT || 22 }} -i ~/.ssh/deploy_key docker-compose.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/
+          scp -P ${{ secrets.DEPLOY_PORT || 22 }} -i ~/.ssh/deploy_key docker-compose.prod.yml ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/
 
       - name: Backup current images
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           set -e
           cd ${{ secrets.DEPLOY_PATH }}
           
@@ -57,13 +57,13 @@ jobs:
 
       - name: Login to ghcr.io
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           EOF
 
       - name: Pull new images
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           set -e
           docker pull ghcr.io/sema94504/aidialogs-bot:latest
           docker pull ghcr.io/sema94504/aidialogs-api:latest
@@ -73,7 +73,7 @@ jobs:
 
       - name: Deploy with docker-compose
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           set -e
           cd ${{ secrets.DEPLOY_PATH }}
           
@@ -86,7 +86,7 @@ jobs:
 
       - name: Verify deployment - Container status
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           echo "Container Status:"
           docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
           
@@ -102,7 +102,7 @@ jobs:
 
       - name: Verify deployment - Health endpoints
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           set +e
           
           echo "Checking API health endpoint..."
@@ -137,7 +137,7 @@ jobs:
       - name: Collect logs on failure
         if: failure()
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF' > /tmp/deploy-logs.txt 2>&1 || true
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF' > /tmp/deploy-logs.txt 2>&1 || true
           echo "=== Container Status ==="
           docker ps -a
           
@@ -158,7 +158,7 @@ jobs:
       - name: Rollback on failure
         if: failure()
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           set -e
           echo "Rolling back to previous version..."
           cd ${{ secrets.DEPLOY_PATH }}
@@ -182,7 +182,7 @@ jobs:
       - name: Cleanup
         if: success()
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           echo "Cleaning up old images and volumes..."
           
           docker image prune -f
@@ -195,7 +195,7 @@ jobs:
       - name: Send success notification
         if: success()
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           EMAIL_BODY="Deployment successful!
           
           Repository: ${{ github.repository }}
@@ -212,7 +212,7 @@ jobs:
       - name: Send failure notification
         if: failure()
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT || 22 }} ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
           EMAIL_BODY="Deployment FAILED!
           
           Repository: ${{ github.repository }}
