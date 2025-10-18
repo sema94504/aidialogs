@@ -27,7 +27,7 @@ services:
     networks:
       - aidialogs_network
     healthcheck:
-      test: ["CMD", "test", "-f", "/data/app.db"]
+      test: ["CMD-SHELL", "test -f /data/app.db"]
       interval: 5s
       timeout: 3s
       retries: 30
