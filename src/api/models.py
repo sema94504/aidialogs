@@ -34,6 +34,7 @@ class RecentMessage(BaseModel):
     telegram_id: int = Field(..., description="ID пользователя в Telegram")
     role: str = Field(..., pattern="^(user|assistant)$", description="Роль отправителя")
     preview: str = Field(..., max_length=100, description="Превью текста (первые 100 символов)")
+    full_text: str = Field(..., description="Полный текст сообщения")
     created_at: str = Field(..., description="Дата создания в формате ISO 8601")
 
 

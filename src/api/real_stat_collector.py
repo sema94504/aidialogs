@@ -148,6 +148,8 @@ class RealStatCollector:
         Returns:
             Список последних 10 сообщений с telegram_id.
         """
+        import json
+
         rows = await self.db.fetchall(
             """
             SELECT
@@ -163,13 +165,24 @@ class RealStatCollector:
             """
         )
 
-        return [
-            RecentMessage(
-                telegram_id=row["telegram_id"],
-                role=row["role"],
-                preview=row["content"][:100],
-                created_at=row["created_at"],
-            )
-            for row in rows
-        ]
+        messages = []
+        for row in rows:
+            # Контент хранится как JSON {"text": "...", "image": "..."}
+            try:
+                content_data = json.loads(row["content"])
+                text = content_data.get("text", "")
+            except (json.JSONDecodeError, TypeError):
+                # Если не JSON, используем как есть
+                text = row["content"]
 
+            messages.append(
+                RecentMessage(
+                    telegram_id=row["telegram_id"],
+                    role=row["role"],
+                    preview=text[:100],
+                    full_text=text,
+                    created_at=row["created_at"],
+                )
+            )
+
+        return messages

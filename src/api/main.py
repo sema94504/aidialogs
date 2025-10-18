@@ -1,19 +1,33 @@
 """FastAPI приложение для Dashboard API."""
 
+import json
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from src.api.chat_models import ChatRequest, ChatResponse
 from src.api.chat_service import ChatService
 from src.api.mock_stat_collector import MockStatCollector
-from src.api.models import DashboardStats
 from src.api.real_stat_collector import RealStatCollector
 from src.api.stat_collector import StatCollector
 from src.config import Config
 from src.database import DatabaseManager
 from src.llm_client import LLMClient
+
+
+class UnicodeJSONResponse(JSONResponse):
+    """JSONResponse с корректной обработкой Unicode."""
+
+    def render(self, content) -> bytes:
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=None,
+            separators=(",", ":"),
+        ).encode("utf-8")
 
 
 @asynccontextmanager
@@ -48,6 +62,7 @@ app = FastAPI(
     description="API для получения статистики диалогов с Telegram ботом",
     version="1.0.0",
     lifespan=lifespan,
+    default_response_class=UnicodeJSONResponse,
 )
 
 # CORS для доступа из frontend
@@ -74,10 +89,10 @@ def get_stat_collector() -> StatCollector:
     return RealStatCollector(app.state.db)
 
 
-@app.get("/api/stats", response_model=DashboardStats)
+@app.get("/api/stats")
 async def get_stats(
     days: int = 7, collector: StatCollector = Depends(get_stat_collector)
-) -> DashboardStats:
+) -> UnicodeJSONResponse:
     """Получить статистику для дашборда.
 
     Args:
@@ -87,7 +102,8 @@ async def get_stats(
     Returns:
         DashboardStats: Полная статистика с метриками, графиком и сообщениями.
     """
-    return await collector.get_stats(days=days)
+    stats = await collector.get_stats(days=days)
+    return UnicodeJSONResponse(content=stats.dict())
 
 
 @app.get("/")
