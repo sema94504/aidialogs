@@ -21,6 +21,7 @@ export interface RecentMessage {
   telegram_id: number;
   role: "user" | "assistant";
   preview: string;
+  full_text: string;
   created_at: string;
 }
 
