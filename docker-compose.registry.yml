@@ -1,16 +1,16 @@
-# Local development Docker Compose configuration
-# This file builds Docker images locally using Dockerfiles
+# Using pre-built images from GitHub Container Registry
+# This file is used for deploying already-built Docker images
+# Replace GITHUB_USERNAME with actual GitHub username
 # 
-# For deploying pre-built images from GitHub Container Registry, use:
+# Usage:
+#   export GITHUB_USERNAME=your-username
 #   docker-compose -f docker-compose.registry.yml up -d
-#
-# See docs/REGISTRY.md for more information
+
+version: '3.8'
 
 services:
   bot:
-    build:
-      context: .
-      dockerfile: Dockerfile.bot
+    image: ghcr.io/${GITHUB_USERNAME:-aidialogs}/aidialogs-bot:latest
     container_name: aidialogs-bot
     network_mode: bridge
     env_file:
@@ -20,9 +20,7 @@ services:
     restart: unless-stopped
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile.api
+    image: ghcr.io/${GITHUB_USERNAME:-aidialogs}/aidialogs-api:latest
     container_name: aidialogs-api
     network_mode: bridge
     ports:
@@ -34,9 +32,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
+    image: ghcr.io/${GITHUB_USERNAME:-aidialogs}/aidialogs-frontend:latest
     container_name: aidialogs-frontend
     network_mode: bridge
     ports:
@@ -47,4 +43,3 @@ services:
     restart: unless-stopped
     links:
       - api:aidialogs-api
-

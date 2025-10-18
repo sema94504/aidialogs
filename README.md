@@ -2,6 +2,8 @@
 
 Telegram бот для диалогов с AI-ассистентом на основе OpenAI-совместимого API.
 
+[![Build & Publish Docker Images](https://github.com/YOUR_USERNAME/aidialogs/actions/workflows/build.yml/badge.svg)](https://github.com/YOUR_USERNAME/aidialogs/actions)
+
 ## Возможности
 
 - 🤖 Диалоги с AI через OpenAI-совместимый API
@@ -126,6 +128,33 @@ make docker-build
 # Полная очистка (удаление контейнеров и volumes)
 make docker-clean
 ```
+
+### Использование образов из GitHub Container Registry
+
+Образы автоматически собираются и публикуются при push в main/develop или при создании release.
+
+#### Загрузка и запуск образов
+
+```bash
+# Загрузить образы из registry (требует публичный доступ)
+make registry-pull GITHUB_USER=<your-github-username>
+
+# Запустить сервисы с образами из registry
+make registry-up GITHUB_USER=<your-github-username>
+
+# Остановить сервисы
+make registry-down
+```
+
+#### Доступные образы
+
+- `ghcr.io/<owner>/aidialogs-bot:latest`
+- `ghcr.io/<owner>/aidialogs-api:latest`
+- `ghcr.io/<owner>/aidialogs-frontend:latest`
+
+**Важно:** По умолчанию образы приватные. Чтобы скачивать их без авторизации, нужно сделать их публичными (см. `.github/REGISTRY.md`).
+
+Подробнее см. `docs/REGISTRY.md`.
 
 ### Разработка (интерактивный режим)
 
