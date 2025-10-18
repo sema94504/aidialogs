@@ -7,5 +7,6 @@ class Config(BaseSettings):
     llm_model: str
     system_prompt_file: str = "prompts/system_prompt.txt"
     database_path: str = "aidialogs.db"
+    use_mock_stats: bool = False
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")

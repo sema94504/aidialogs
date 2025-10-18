@@ -47,10 +47,14 @@ class DatabaseManager:
             return int(user["id"])
 
         now = datetime.utcnow().isoformat()
+
+        # Использовать INSERT OR IGNORE для избежания ошибки UNIQUE constraint
         await self.execute(
-            "INSERT INTO users (telegram_id, created_at) VALUES (?, ?)", (telegram_id, now)
+            "INSERT OR IGNORE INTO users (telegram_id, created_at) VALUES (?, ?)",
+            (telegram_id, now),
         )
 
+        # Получить id пользователя (может быть уже существующий)
         user = await self.fetchone("SELECT id FROM users WHERE telegram_id = ?", (telegram_id,))
         if not user:
             raise RuntimeError("Failed to create user")
