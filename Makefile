@@ -1,5 +1,6 @@
 .PHONY: help lint format typecheck test coverage run run-api run-api-mock test-api clean install-services start stop status logs logs-watcher
 .PHONY: frontend-dev frontend-lint frontend-typecheck frontend-build
+.PHONY: docker-up docker-down docker-logs docker-logs-bot docker-logs-api docker-logs-frontend docker-status docker-build docker-clean
 
 .DEFAULT_GOAL := help
 
@@ -32,6 +33,17 @@ help:
 	@echo "  make status           Show services status"
 	@echo "  make logs             Show bot logs"
 	@echo "  make logs-watcher     Show watcher logs"
+	@echo ""
+	@echo "Docker:"
+	@echo "  make docker-up        Start all services with Docker Compose"
+	@echo "  make docker-down      Stop all services"
+	@echo "  make docker-logs      Show logs from all services"
+	@echo "  make docker-logs-bot  Show bot logs"
+	@echo "  make docker-logs-api  Show API logs"
+	@echo "  make docker-logs-frontend  Show frontend logs"
+	@echo "  make docker-status    Show services status"
+	@echo "  make docker-build     Build Docker images"
+	@echo "  make docker-clean     Stop and remove all containers and volumes"
 	@echo ""
 	@echo "Misc:"
 	@echo "  make clean            Clean cache and logs"
@@ -113,3 +125,30 @@ frontend-typecheck:
 
 frontend-build:
 	cd frontend && pnpm build
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down
+
+docker-logs:
+	docker compose logs -f
+
+docker-logs-bot:
+	docker compose logs -f bot
+
+docker-logs-api:
+	docker compose logs -f api
+
+docker-logs-frontend:
+	docker compose logs -f frontend
+
+docker-status:
+	docker compose ps
+
+docker-build:
+	docker compose build
+
+docker-clean:
+	docker compose down -v
