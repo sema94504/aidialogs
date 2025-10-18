@@ -1,6 +1,7 @@
 .PHONY: help lint format typecheck test coverage run run-api run-api-mock test-api clean install-services start stop status logs logs-watcher
 .PHONY: frontend-dev frontend-lint frontend-typecheck frontend-build
 .PHONY: docker-up docker-down docker-logs docker-logs-bot docker-logs-api docker-logs-frontend docker-status docker-build docker-clean
+.PHONY: registry-pull registry-up registry-down registry-logs
 
 .DEFAULT_GOAL := help
 
@@ -44,6 +45,12 @@ help:
 	@echo "  make docker-status    Show services status"
 	@echo "  make docker-build     Build Docker images"
 	@echo "  make docker-clean     Stop and remove all containers and volumes"
+	@echo ""
+	@echo "Registry (GitHub Container Registry):"
+	@echo "  make registry-pull    Pull images from ghcr.io"
+	@echo "  make registry-up      Start services with registry images"
+	@echo "  make registry-down    Stop registry services"
+	@echo "  make registry-logs    Show registry services logs"
 	@echo ""
 	@echo "Misc:"
 	@echo "  make clean            Clean cache and logs"
@@ -152,3 +159,18 @@ docker-build:
 
 docker-clean:
 	docker compose down -v
+
+registry-pull:
+	@echo "Pulling images from GitHub Container Registry..."
+	./scripts/registry-pull.sh $(GITHUB_USER) latest pull
+
+registry-up:
+	@echo "Starting services with registry images..."
+	./scripts/registry-pull.sh $(GITHUB_USER) latest up
+
+registry-down:
+	@echo "Stopping registry services..."
+	./scripts/registry-pull.sh $(GITHUB_USER) latest down
+
+registry-logs:
+	docker compose -f docker-compose.registry.yml logs -f

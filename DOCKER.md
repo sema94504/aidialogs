@@ -134,3 +134,35 @@ make frontend-dev
 
 Это позволит быстрее итерироваться без пересборки Docker образов.
 
+## GitHub Container Registry (ghcr.io)
+
+Образы автоматически собираются и публикуются в GitHub Container Registry при push в main/develop.
+
+### Workflow автоматизации
+
+Файл `.github/workflows/build.yml`:
+- Запускается автоматически при push в main, develop и на release tags
+- Собирает образы всех 3 сервисов параллельно
+- Публикует в `ghcr.io/<owner>/aidialogs-{service}:latest`
+- Использует кэширование Docker layers для скорости
+
+### Использование образов из registry
+
+```bash
+# Загрузить образы
+make registry-pull GITHUB_USER=<your-username>
+
+# Запустить сервисы
+make registry-up GITHUB_USER=<your-username>
+
+# Остановить
+make registry-down
+```
+
+**Важно:** Образы по умолчанию приватные. Сделайте их публичными в настройках package на GitHub.
+
+Подробнее см:
+- `.github/REGISTRY.md` - настройка registry
+- `docs/REGISTRY.md` - полная инструкция
+- `docs/github-actions-guide.md` - как работает workflow
+
